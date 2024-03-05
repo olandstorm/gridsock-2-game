@@ -1,13 +1,16 @@
-import displayMainPage from "./displayMainPage";
-import printStart from "./printStart";
+import displayMainPage from './displayMainPage';
+import updateChat from './updateChat.mjs';
+import sendChat from './sendChat.mjs';
+import { io } from 'socket.io-client';
+const socket = io('http://localhost:3000');
 
 export default function displayChatRoom(room) {
-    document.body.innerHTML = "";
+  document.body.innerHTML = '';
 
-    const chatPage = document.createElement("div");
-    chatPage.classList.add("chat_page");
+  const chatPage = document.createElement('div');
+  chatPage.classList.add('chat_page');
 
-    chatPage.innerHTML = `
+  chatPage.innerHTML = `
     <nav class="nav_bar">
         <h2>friendHub</h2>
         <h3>${room}</h3>
@@ -26,23 +29,22 @@ export default function displayChatRoom(room) {
             <ul id="chatList">
         </div>
     </div>
-    `
-    document.body.appendChild(chatPage);
+    `;
 
-    let inputMessage = document.querySelector("#inputMessage");
-    let sendMessageBtn = document.querySelector("#sendMessageBtn");
+  socket.on('chat', (arg) => {
+    updateChat(arg);
+  });
 
-    sendMessageBtn.addEventListener("click", function() {
+  document.body.appendChild(chatPage);
 
-        let user = sessionStorage.getItem("user");
+  let inputMessage = document.querySelector('#inputMessage');
+  let sendMessageBtn = document.querySelector('#sendMessageBtn');
 
-        let li = document.createElement("li");
-        li.innerText = user + ": " + inputMessage.value;
-        chatList.appendChild(li);
+  sendMessageBtn.addEventListener('click', function () {
+    sendChat(inputMessage);
+    inputMessage.value = '';
+  });
 
-        inputMessage.value = "";
-    });
-
-    const leaveRoomBtn = document.querySelector(".leave_room_btn");
-    leaveRoomBtn.addEventListener("click", displayMainPage);
+  const leaveRoomBtn = document.querySelector('.leave_room_btn');
+  leaveRoomBtn.addEventListener('click', displayMainPage);
 }
