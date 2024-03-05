@@ -1,6 +1,8 @@
 const app = require("express")();
 const server = require("http").createServer(app);
 
+const { generateMessage } = require('./lib/message.js');
+
 const io = require("socket.io")(server, {
     cors: {
         origin: "*",
@@ -15,11 +17,16 @@ const allRooms = [];
 io.on("connection", (socket) => {
     //console.log("connection", socket)
 
-    socket.emit("chat", {message: 'Welcome to the chat!', user: 'Admin'})
+    //Send to ONE
+    socket.emit("chat", generateMessage('Admin', 'Welcome to Color Chaos!'));
 
+    //send to everyone but "me"
+    socket.broadcast.emit('newMessage', generateMessage('Admin', `New user has joined`));
+
+    
     socket.on("chat", (arg) => {
         console.log("incoming chat", arg);
-        io.emit("chat", arg);
+        io.emit("chat", generateMessage(arg.user, arg.message));
     })
 
     // Send list of all rooms to every client
