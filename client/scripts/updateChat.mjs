@@ -14,6 +14,6 @@ export default function updateChat(chat) {
     li.classList.add('msg_from_other');
   }
 
-  li.innerText = user + ' said: ' + chat.message;
+  li.innerText = user + ' said: ' + chat.message + chat.createdAt;
   chatList.append(li);
 }
