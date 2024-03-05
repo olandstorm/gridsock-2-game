@@ -1,5 +1,5 @@
 {
-  "name": "socket-client",
+  "name": "client",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,7 +9,10 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "sass": "^1.71.1",
     "vite": "^5.1.4"
+  },
+  "dependencies": {
+    "sass": "^1.71.1",
+    "socket.io-client": "^4.7.4"
   }
 }
