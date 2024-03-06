@@ -3,6 +3,7 @@ import displayChatRoom from './displayChatRoom';
 
 export default function updateRoomList(rooms) {
   const roomsContainer = document.querySelector('.rooms_container');
+  const userName = sessionStorage.getItem('user');
   if (roomsContainer) {
     roomsContainer.innerHTML = '';
 
@@ -10,7 +11,7 @@ export default function updateRoomList(rooms) {
       const roomName = document.createElement('button');
       roomName.textContent = room;
       roomName.addEventListener('click', () => {
-        socket.emit('join room', room);
+        socket.emit('join room', room, userName);
         displayChatRoom(room);
       });
       roomsContainer.appendChild(roomName);
