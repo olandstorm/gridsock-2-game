@@ -1,8 +1,7 @@
 import displayMainPage from './displayMainPage';
 import updateChat from './updateChat.mjs';
 import sendChat from './sendChat.mjs';
-import { io } from 'socket.io-client';
-const socket = io('http://localhost:3000');
+import { socket } from '../main.js';
 
 export default function displayChatRoom(room) {
   document.body.innerHTML = '';
@@ -24,9 +23,9 @@ export default function displayChatRoom(room) {
   leaveRoomBtn.classList.add('leave_room_btn');
   leaveRoomBtn.innerText = 'Leave Room';
   leaveRoomBtn.addEventListener('click', () => {
-          displayMainPage();
-      });
-      
+    displayMainPage();
+  });
+
   navBar.append(title, roomName, leaveRoomBtn);
 
   // create container for messages
@@ -49,9 +48,9 @@ export default function displayChatRoom(room) {
   sendMessageBtn.id = 'sendMessageBtn';
   sendMessageBtn.innerText = 'SEND';
   sendMessageBtn.addEventListener('click', () => {
-      sendChat(inputMessage);
-      inputMessage.value = '';
-    });
+    sendChat(inputMessage, room);
+    inputMessage.value = '';
+  });
 
   sendMessageContainer.append(inputLabel, inputMessage, sendMessageBtn);
 
@@ -68,10 +67,11 @@ export default function displayChatRoom(room) {
   chatMainSection.append(sendMessageContainer, chatBox);
   chatPage.append(navBar, chatMainSection);
 
+  console.log('chat rum:', room);
   socket.on('chat', (arg) => {
+    console.log('chat tillbaka:', arg);
     updateChat(arg);
   });
-  
+
   document.body.appendChild(chatPage);
-  
 }

@@ -1,9 +1,10 @@
-let generateMessage = (user, message) => {
-    return {
-        user, 
-        message, 
-        createdAt: new Date().toLocaleString()
-    };
+let generateMessage = (user, message, room) => {
+  return {
+    user,
+    message,
+    room,
+    createdAt: new Date().toLocaleString(),
+  };
 };
 
 module.exports = { generateMessage };
