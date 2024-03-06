@@ -2,6 +2,8 @@ import { socket } from '../main.js';
 import updateRoomList from './updateRoomList';
 import displayChatRoom from './displayChatRoom';
 
+let currentColor = null;
+
 export default function displayMainPage() {
   // Rensa body från allt innehåll
   document.body.innerHTML = '';
@@ -44,6 +46,11 @@ export default function displayMainPage() {
     }
   });
 
+  socket.on('room joined', (data) => {
+    console.log('Room joined:', data);
+    currentColor = data.color;
+  });
+
   // add all element to mainContainer
   createRoomSection.append(createRoomText, inputRoomName, createRoomBtn);
   mainContainer.append(
@@ -60,3 +67,5 @@ export default function displayMainPage() {
   socket.emit('get rooms');
   socket.on('room list', updateRoomList);
 }
+
+export { currentColor };
