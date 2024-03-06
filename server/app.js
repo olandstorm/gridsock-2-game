@@ -56,7 +56,11 @@ io.on('connection', (socket) => {
       roomConnectedUsers[room] = [];
     }
 
-    roomConnectedUsers[room].push(username)
+    // If the room does not include the username, push the username 
+    if (!roomConnectedUsers[room].includes(username)) {
+      roomConnectedUsers[room].push(username)
+    }
+
 
     socket.join(room);
     io.emit('all players', roomConnectedUsers);
