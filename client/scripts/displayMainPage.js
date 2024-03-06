@@ -3,6 +3,7 @@ import updateRoomList from './updateRoomList';
 import displayChatRoom from './displayChatRoom';
 
 const userName = sessionStorage.getItem('user');
+let currentColor = null;
 
 export default function displayMainPage() {
   // Rensa body från allt innehåll
@@ -46,6 +47,11 @@ export default function displayMainPage() {
     }
   });
 
+  socket.on('room joined', (data) => {
+    console.log('Room joined:', data);
+    currentColor = data.color;
+  });
+
   // add all element to mainContainer
   createRoomSection.append(createRoomText, inputRoomName, createRoomBtn);
   mainContainer.append(
@@ -62,3 +68,5 @@ export default function displayMainPage() {
   socket.emit('get rooms');
   socket.on('room list', updateRoomList);
 }
+
+export { currentColor };

@@ -34,7 +34,7 @@ io.on('connection', (socket) => {
     console.log(`User ${socket.id} connected to rooms:`, socket.rooms);
     io.to(arg.room).emit(
       'chat',
-      generateMessage(arg.user, arg.message, arg.room)
+      generateMessage(arg.user, arg.message, arg.room, arg.color)
     );
   });
 
@@ -71,6 +71,10 @@ io.on('connection', (socket) => {
       ' with color:',
       color
     );
+    socket.emit('room joined', {
+      room: room,
+      color: color,
+    });
   });
 });
 
