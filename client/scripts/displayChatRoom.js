@@ -1,8 +1,7 @@
 import displayMainPage from './displayMainPage';
 import updateChat from './updateChat.mjs';
 import sendChat from './sendChat.mjs';
-import { io } from 'socket.io-client';
-const socket = io('http://localhost:3000');
+import { socket } from '../main.js';
 
 export default function displayChatRoom(room) {
   document.body.innerHTML = '';
@@ -31,7 +30,9 @@ export default function displayChatRoom(room) {
     </div>
     `;
 
+  console.log('chat rum:', room);
   socket.on('chat', (arg) => {
+    console.log('chat tillbaka:', arg);
     updateChat(arg);
   });
 
@@ -41,7 +42,7 @@ export default function displayChatRoom(room) {
   let sendMessageBtn = document.querySelector('#sendMessageBtn');
 
   sendMessageBtn.addEventListener('click', function () {
-    sendChat(inputMessage);
+    sendChat(inputMessage, room);
     inputMessage.value = '';
   });
 
