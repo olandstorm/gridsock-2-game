@@ -3,32 +3,38 @@ import updateRoomList from './updateRoomList';
 import displayChatRoom from './displayChatRoom';
 
 export default function displayMainPage() {
+  // Rensa body från allt innehåll
   document.body.innerHTML = '';
+
+  // create main container
   const mainContainer = document.createElement('div');
   mainContainer.classList.add('main_container');
 
-  mainContainer.innerHTML = `
-        <h1>friendHub</h1>
-        <span>Enter a room</span>
-        <div class="rooms_container"></div>
-        <div class="create_room_section">
-            <span class="create_room_text">Or create a new room</span>
-            <input type="text" class="input_room_name">
-            <button class="create_room_btn">Create and Enter</button>
-        </div>
-    `;
+  // create header
+  const title = document.createElement('h1');
+  title.innerText = 'Color Chaos';
 
-  // Change this when a proper html structure has been agreed upon
-  document.body.appendChild(mainContainer);
+  const enterRoomInstruction = document.createElement('span');
+  enterRoomInstruction.innerText = 'Enter a room';
 
-  const createRoomBtn = document.querySelector('.create_room_btn');
-  const inputRoomName = document.querySelector('.input_room_name');
+  // create container for rooms and create new room
+  const roomsContainer = document.createElement('div');
+  roomsContainer.classList.add('rooms_container');
 
-  // Request room list initially and update UI
-  socket.emit('get rooms');
-  socket.on('room list', updateRoomList);
+  const createRoomSection = document.createElement('div');
+  createRoomSection.classList.add('create_room_section');
 
-  // Create a room and then join it
+  const createRoomText = document.createElement('span');
+  createRoomText.classList.add('create_room_text');
+  createRoomText.innerText = 'Or create a new room';
+
+  const inputRoomName = document.createElement('input');
+  inputRoomName.type = 'text';
+  inputRoomName.classList.add('input_room_name');
+
+  const createRoomBtn = document.createElement('button');
+  createRoomBtn.classList.add('create_room_btn');
+  createRoomBtn.innerText = 'Create and Enter';
   createRoomBtn.addEventListener('click', () => {
     const roomName = inputRoomName.value;
     if (roomName) {
@@ -37,4 +43,20 @@ export default function displayMainPage() {
       displayChatRoom(roomName);
     }
   });
+
+  // add all element to mainContainer
+  createRoomSection.append(createRoomText, inputRoomName, createRoomBtn);
+  mainContainer.append(
+    title,
+    enterRoomInstruction,
+    roomsContainer,
+    createRoomSection
+  );
+
+  // add mainContainer to body
+  document.body.appendChild(mainContainer);
+
+  // Request room list initially and update UI
+  socket.emit('get rooms');
+  socket.on('room list', updateRoomList);
 }
