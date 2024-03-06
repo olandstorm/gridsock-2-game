@@ -12,7 +12,7 @@ const io = require('socket.io')(server, {
 
 // List of all rooms
 const allRooms = [];
-const roomConnectedUserss = {};
+const roomConnectedUsers = {};
 
 io.on('connection', (socket) => {
 
@@ -52,13 +52,14 @@ io.on('connection', (socket) => {
   socket.on('join room', (room, username) => {
     const color = selectColor(room);
 
-    if (!roomConnectedUserss[room]) {
-      roomConnectedUserss[room] = [];
+    if (!roomConnectedUsers[room]) {
+      roomConnectedUsers[room] = [];
     }
 
-    roomConnectedUserss[room].push(username)
+    roomConnectedUsers[room].push(username)
 
     socket.join(room);
+    io.emit('all players', roomConnectedUsers);
     console.log('joined room:', room);
     console.log(
       `User ${socket.id} connected to rooms:`,
