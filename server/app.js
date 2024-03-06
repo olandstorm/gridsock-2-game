@@ -17,15 +17,7 @@ io.on('connection', (socket) => {
   console.log(`User connected: ${socket.id}`);
   //console.log("connection", socket)
 
-  //Send to ONE
-  socket.emit('chat', generateMessage('Admin', 'Welcome to Color Chaos!'));
-
-  //send to everyone but "me"
-  socket.broadcast.emit(
-    'newMessage',
-    generateMessage('Admin', `New user has joined`)
-  );
-
+  
   socket.on('chat', (arg) => {
     console.log('incoming chat', arg);
     console.log('to room', arg.room);
@@ -51,11 +43,15 @@ io.on('connection', (socket) => {
     socket.join(room);
     console.log('joined room:', room);
     console.log(`User ${socket.id} connected to rooms:`, socket.rooms);
+    
+    //Send to ONE
+    io.to(socket.id).emit('chat', generateMessage('Admin', 'Welcome to Color Chaos!'));
+    
+     //After LOGIN is done we can change user to display name.
+    //send to everyone but "me"
+    socket.broadcast.to(room).emit('chat', generateMessage('Admin', `New user has joined`, room));
   });
 });
 
-app.get('/test', (req, res) => {
-  res.send('<h1>socket</h1>');
-});
 
 server.listen(3000);
