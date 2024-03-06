@@ -1,6 +1,6 @@
 const app = require('express')();
 const server = require('http').createServer(app);
-
+const { selectColor } = require('./lib/colorAssign.js');
 const { generateMessage } = require('./lib/message.js');
 
 const io = require('socket.io')(server, {
@@ -40,9 +40,10 @@ io.on('connection', (socket) => {
 
   // Allow the client to join specific room
   socket.on('join room', (room) => {
+    const color = selectColor(room);
     socket.join(room);
     console.log('joined room:', room);
-    console.log(`User ${socket.id} connected to rooms:`, socket.rooms);
+    console.log( `User ${socket.id} connected to rooms:`, socket.rooms, ' with color:', color);
     
     //Send to ONE
     io.to(socket.id).emit('chat', generateMessage('Admin', 'Welcome to Color Chaos!'));

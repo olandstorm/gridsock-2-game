@@ -1,4 +1,4 @@
-import displayMainPage from "./displayMainPage";
+import displayMainPage from './displayMainPage';
 
 export default function printStart() {
   const body = document.body;
@@ -7,7 +7,7 @@ export default function printStart() {
 
   const logoBigImg = document.createElement('img');
   /* logoImg.src = ''; */
-  logoBigImg.alt = 'Logotype for FriendHUB';
+  logoBigImg.alt = 'Logotype for Color Chaos';
 
   const nameContainer = document.createElement('div');
   nameContainer.classList.add('name_container');
