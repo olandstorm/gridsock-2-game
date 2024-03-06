@@ -2,6 +2,8 @@ import { socket } from '../main.js';
 import updateRoomList from './updateRoomList';
 import displayChatRoom from './displayChatRoom';
 
+const userName = sessionStorage.getItem('user');
+
 export default function displayMainPage() {
   // Rensa body från allt innehåll
   document.body.innerHTML = '';
@@ -39,7 +41,7 @@ export default function displayMainPage() {
     const roomName = inputRoomName.value;
     if (roomName) {
       socket.emit('create room', roomName);
-      socket.emit('join room', roomName);
+      socket.emit('join room', roomName, userName);
       displayChatRoom(roomName);
     }
   });
