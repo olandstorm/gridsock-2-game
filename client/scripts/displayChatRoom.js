@@ -48,7 +48,7 @@ export default function displayChatRoom(room) {
   sendMessageBtn.id = 'sendMessageBtn';
   sendMessageBtn.innerText = 'SEND';
   sendMessageBtn.addEventListener('click', () => {
-    sendChat(inputMessage);
+    sendChat(inputMessage, room);
     inputMessage.value = '';
   });
 
