@@ -30,6 +30,12 @@ export default function displayChatRoom(room) {
     displayMainPage();
   });
 
+  // When a user leaves the page, emit event and update player list
+  window.addEventListener('beforeunload', () => {
+    socket.emit('leave room', room, sessionStorage.getItem('user'));
+    updatePlayers(room);
+  });
+
   navBar.append(title, roomName, leaveRoomBtn);
 
   // create game grid container
