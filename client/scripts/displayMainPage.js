@@ -2,7 +2,6 @@ import { socket } from '../main.js';
 import updateRoomList from './updateRoomList';
 import displayChatRoom from './displayChatRoom';
 
-const userName = sessionStorage.getItem('user');
 let currentColor = null;
 
 export default function displayMainPage() {
@@ -39,6 +38,7 @@ export default function displayMainPage() {
   createRoomBtn.classList.add('create_room_btn');
   createRoomBtn.innerText = 'Create and Enter';
   createRoomBtn.addEventListener('click', () => {
+    const userName = sessionStorage.getItem('user');
     const roomName = inputRoomName.value;
     if (roomName) {
       socket.emit('create room', roomName);
