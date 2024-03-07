@@ -1,7 +1,13 @@
 const app = require('express')();
 const server = require('http').createServer(app);
+const usersRouter = require('./routes/users');
 const { selectColor } = require('./lib/colorAssign.js');
 const { generateMessage } = require('./lib/message.js');
+const express = require('express');
+
+
+app.use(express.json());
+app.use('/users', usersRouter);
 
 const io = require('socket.io')(server, {
   cors: {
@@ -75,10 +81,10 @@ io.on('connection', (socket) => {
     //send to everyone but "me"
     socket.broadcast.to(room).emit('chat', generateMessage('Admin', `New user has joined`, room));
 
-    // Hantera när en spelare klickar på en cell
+    // handle when a user clicks on a cell
     socket.on('cellClicked', ({ row, col }) => {
-     // Här kan du lägga till logik för att hantera vilken spelare som klickade och uppdatera alla andra klienter
-     io.emit('updateCell', { row, col, color /* spelarens id eller färg */ });
+
+      io.emit('updateCell', { row, col, color });
    });
   });
 });
