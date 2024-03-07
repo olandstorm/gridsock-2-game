@@ -12,8 +12,10 @@ const io = require('socket.io')(server, {
 
 // List of all rooms
 const allRooms = [];
+const roomConnectedUsers = {};
 
 io.on('connection', (socket) => {
+
   console.log(`User connected: ${socket.id}`);
   //console.log("connection", socket)
 
@@ -47,9 +49,21 @@ io.on('connection', (socket) => {
   });
 
   // Allow the client to join specific room
-  socket.on('join room', (room) => {
+  socket.on('join room', (room, username) => {
     const color = selectColor(room);
+
+    if (!roomConnectedUsers[room]) {
+      roomConnectedUsers[room] = [];
+    }
+
+    // If the room does not include the username, push the username 
+    if (!roomConnectedUsers[room].includes(username)) {
+      roomConnectedUsers[room].push(username)
+    }
+
+
     socket.join(room);
+    io.emit('all players', roomConnectedUsers);
     console.log('joined room:', room);
     console.log(
       `User ${socket.id} connected to rooms:`,

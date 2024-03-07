@@ -38,10 +38,11 @@ export default function displayMainPage() {
   createRoomBtn.classList.add('create_room_btn');
   createRoomBtn.innerText = 'Create and Enter';
   createRoomBtn.addEventListener('click', () => {
+    const userName = sessionStorage.getItem('user');
     const roomName = inputRoomName.value;
     if (roomName) {
       socket.emit('create room', roomName);
-      socket.emit('join room', roomName);
+      socket.emit('join room', roomName, userName);
       displayChatRoom(roomName);
     }
   });

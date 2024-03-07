@@ -61,6 +61,32 @@ export default function displayChatRoom(room) {
   const chatList = document.createElement('ul');
   chatList.id = 'chatList';
 
+  // Updates the player list displayed in the UI based on the received roomConnectedUsers object.
+  socket.on('all players', (roomConnectedUsers) => {
+    let playerList = document.querySelector('.player_list');
+
+    if (!playerList) {
+      playerList = document.createElement('ul');
+      playerList.classList.add('player_list');
+    }
+
+    else {
+      playerList.innerHTML = '';
+    }
+
+    roomConnectedUsers[room].forEach(user => {
+      const playerName = document.createElement('li');
+      playerName.classList.add('player_name');
+      playerName.innerText = user;
+
+      playerList.appendChild(playerName);
+    })
+
+    chatList.appendChild(playerList);
+    
+});
+
+
   chatBox.appendChild(chatList);
 
   // add all elements to chatPage
