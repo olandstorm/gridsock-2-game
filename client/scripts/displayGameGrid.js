@@ -23,9 +23,16 @@ export default function createGameGrid(gridContainer) {
         socket.emit('cellClicked', { row, col });
     });
     
-    socket.on('updateCell', ({ row, col, user}) => {
+    socket.on('updateCell', ({ row, col, color}) => {
         const cell = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
-        cell.classList.add(`user${user}`);
+
+        cell.classList.forEach(className => {
+            if (className.startsWith('user_')) {
+                cell.classList.remove(className);
+            }
+        });
+        
+        cell.classList.add(`user_${color}`);
     });
 }
 
