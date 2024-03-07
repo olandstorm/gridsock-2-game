@@ -1,6 +1,7 @@
 import { socket } from '../main.js';
 import updateRoomList from './updateRoomList';
 import displayChatRoom from './displayChatRoom';
+import createPopup from './lib/createPopup.mjs';
 
 let currentColor = null;
 
@@ -34,6 +35,17 @@ export default function displayMainPage() {
   inputRoomName.type = 'text';
   inputRoomName.classList.add('input_room_name');
 
+  const instructionBtn = document.createElement('button');
+  instructionBtn.innerText = 'How to play';
+  instructionBtn.addEventListener('click', () => {
+    createPopup(
+      `The game starts with a blank canvas.
+    Click on the squares to color the square.
+    The goal is to cover as much of the canvas as possible with one's color before time runs out.`,
+      'instruction_popup'
+    );
+  });
+
   const createRoomBtn = document.createElement('button');
   createRoomBtn.classList.add('create_room_btn');
   createRoomBtn.innerText = 'Create and Enter';
@@ -56,6 +68,7 @@ export default function displayMainPage() {
   createRoomSection.append(createRoomText, inputRoomName, createRoomBtn);
   mainContainer.append(
     title,
+    instructionBtn,
     enterRoomInstruction,
     roomsContainer,
     createRoomSection

@@ -5,3 +5,30 @@
 @media (hover: hover) {
   @import 'style/abstracts/hover';
 }
+
+.grid_container {
+  display: grid;
+  grid-template-columns: repeat(25, 1fr);
+  grid-template-rows: repeat(25, 1fr);
+  gap: 2px;
+}
+
+.cell {
+  width: 30px;
+  height: 30px;
+  border: 1px solid black;
+  background-color: darkgray;
+}
+
+.user_pink { 
+  background-color: red; 
+}
+.user_blue { 
+  background-color: blue; 
+}
+.user_green { 
+  background-color: green; 
+}
+.user_yellow { 
+  background-color: yellow; 
+}
