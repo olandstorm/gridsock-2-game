@@ -22,8 +22,6 @@ body {
   background: $bg-gradient;
   color: $color;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
 }
 
 ol,
@@ -78,4 +76,24 @@ h2 {
   max-width: 550px;
   margin-top: 100px;
   height: auto;
+}
+
+.top_btns_container {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  column-gap: 15px;
+}
+
+.sticky_container {
+  position: sticky;
+  top: 0;
+  height: 100%;
+}
+
+.main_container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }

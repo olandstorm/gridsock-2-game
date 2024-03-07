@@ -48,6 +48,14 @@ export default function displayMainPage() {
     );
   });
 
+  const topBtnsContainer = document.createElement('div');
+  topBtnsContainer.classList.add('top_btns_container');
+  topBtnsContainer.appendChild(instructionBtn);
+
+  const stickyContainer = document.createElement('div');
+  stickyContainer.classList.add('sticky_container');
+  stickyContainer.appendChild(topBtnsContainer);
+
   const createRoomBtn = document.createElement('button');
   createRoomBtn.classList.add('create_room_btn');
   createRoomBtn.innerText = 'Create and Enter';
@@ -69,14 +77,14 @@ export default function displayMainPage() {
   // add all element to mainContainer
   createRoomSection.append(createRoomText, inputRoomName, createRoomBtn);
   mainContainer.append(
-    instructionBtn,
+    logoBigImg,
     enterRoomInstruction,
     roomsContainer,
     createRoomSection
   );
 
   // add mainContainer to body
-  document.body.append(logoBigImg, mainContainer);
+  document.body.append(stickyContainer, mainContainer);
 
   // Request room list initially and update UI
   socket.emit('get rooms');
