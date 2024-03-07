@@ -13,9 +13,11 @@ export default function displayMainPage() {
   const mainContainer = document.createElement('div');
   mainContainer.classList.add('main_container');
 
-  // create header
-  const title = document.createElement('h1');
-  title.innerText = 'Color Chaos';
+  // create logo
+  const logoBigImg = document.createElement('img');
+  logoBigImg.src = 'assets/img/colorchaos_logo.webp';
+  logoBigImg.alt = 'Logotype for Color Chaos';
+  logoBigImg.classList.add('logo_img_big');
 
   const enterRoomInstruction = document.createElement('span');
   enterRoomInstruction.innerText = 'Enter a room';
@@ -67,7 +69,6 @@ export default function displayMainPage() {
   // add all element to mainContainer
   createRoomSection.append(createRoomText, inputRoomName, createRoomBtn);
   mainContainer.append(
-    title,
     instructionBtn,
     enterRoomInstruction,
     roomsContainer,
@@ -75,7 +76,7 @@ export default function displayMainPage() {
   );
 
   // add mainContainer to body
-  document.body.appendChild(mainContainer);
+  document.body.append(logoBigImg, mainContainer);
 
   // Request room list initially and update UI
   socket.emit('get rooms');

@@ -1,0 +1,30 @@
+.grid_container {
+  display: grid;
+  grid-template-columns: repeat(25, 1fr);
+  grid-template-rows: repeat(25, 1fr);
+  gap: 7px;
+}
+
+.cell {
+  width: 18px;
+  height: 18px;
+  border: none;
+  background-color: $game-board-color;
+}
+
+.user_pink {
+  background-color: $game-color-pink;
+  box-shadow: 0 0 3px 1px $game-color-pink;
+}
+.user_blue {
+  background-color: $game-color-blue;
+  box-shadow: 0 0 3px 1px $game-color-blue;
+}
+.user_green {
+  background-color: $game-color-green;
+  box-shadow: 0 0 3px 1px $game-color-green;
+}
+.user_yellow {
+  background-color: $game-color-yellow;
+  box-shadow: 0 0 3px 1px $game-color-yellow;
+}

@@ -22,6 +22,8 @@ body {
   background: $bg-gradient;
   color: $color;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 ol,
@@ -60,7 +62,6 @@ div {
   flex-direction: column;
   margin: auto;
   align-items: center;
-  padding: 100px;
   row-gap: 20px;
 }
 
@@ -71,7 +72,10 @@ h2 {
   color: $h2-color;
 }
 
-img {
-  width: 30%;
+.logo_img_big {
+  align-self: center;
+  width: 45%;
+  max-width: 550px;
+  margin-top: 100px;
   height: auto;
 }

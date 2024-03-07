@@ -6,8 +6,9 @@ export default function printStart() {
   body.innerHTML = '';
 
   const logoBigImg = document.createElement('img');
-  /* logoImg.src = ''; */
+  logoBigImg.src = 'assets/img/colorchaos_logo.webp';
   logoBigImg.alt = 'Logotype for Color Chaos';
+  logoBigImg.classList.add('logo_img_big');
 
   const nameContainer = document.createElement('div');
   nameContainer.classList.add('name_container');
