@@ -2,6 +2,8 @@ import { socket } from '../main.js';
 import updateRoomList from './updateRoomList';
 import displayChatRoom from './displayChatRoom';
 
+let currentColor = null;
+
 export default function displayMainPage() {
   // Rensa body från allt innehåll
   document.body.innerHTML = '';
@@ -36,12 +38,18 @@ export default function displayMainPage() {
   createRoomBtn.classList.add('create_room_btn');
   createRoomBtn.innerText = 'Create and Enter';
   createRoomBtn.addEventListener('click', () => {
+    const userName = sessionStorage.getItem('user');
     const roomName = inputRoomName.value;
     if (roomName) {
       socket.emit('create room', roomName);
-      socket.emit('join room', roomName);
+      socket.emit('join room', roomName, userName);
       displayChatRoom(roomName);
     }
+  });
+
+  socket.on('room joined', (data) => {
+    console.log('Room joined:', data);
+    currentColor = data.color;
   });
 
   // add all element to mainContainer
@@ -60,3 +68,5 @@ export default function displayMainPage() {
   socket.emit('get rooms');
   socket.on('room list', updateRoomList);
 }
+
+export { currentColor };

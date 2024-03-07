@@ -12,8 +12,10 @@ const io = require('socket.io')(server, {
 
 // List of all rooms
 const allRooms = [];
+const roomConnectedUsers = {};
 
 io.on('connection', (socket) => {
+
   console.log(`User connected: ${socket.id}`);
   //console.log("connection", socket)
 
@@ -24,7 +26,7 @@ io.on('connection', (socket) => {
     console.log(`User ${socket.id} connected to rooms:`, socket.rooms);
     io.to(arg.room).emit(
       'chat',
-      generateMessage(arg.user, arg.message, arg.room)
+      generateMessage(arg.user, arg.message, arg.room, arg.color)
     );
   });
 
@@ -39,11 +41,32 @@ io.on('connection', (socket) => {
   });
 
   // Allow the client to join specific room
-  socket.on('join room', (room) => {
+  socket.on('join room', (room, username) => {
     const color = selectColor(room);
+
+    if (!roomConnectedUsers[room]) {
+      roomConnectedUsers[room] = [];
+    }
+
+    // If the room does not include the username, push the username 
+    if (!roomConnectedUsers[room].includes(username)) {
+      roomConnectedUsers[room].push(username)
+    }
+
+
     socket.join(room);
+    io.emit('all players', roomConnectedUsers);
     console.log('joined room:', room);
-    console.log( `User ${socket.id} connected to rooms:`, socket.rooms, ' with color:', color);
+    console.log(
+      `User ${socket.id} connected to rooms:`,
+      socket.rooms,
+      ' with color:',
+      color
+    );
+    socket.emit('room joined', {
+      room: room,
+      color: color,
+    });
     
     //Send to ONE
     io.to(socket.id).emit('chat', generateMessage('Admin', 'Welcome to Color Chaos!'));
@@ -51,6 +74,7 @@ io.on('connection', (socket) => {
      //After LOGIN is done we can change user to display name.
     //send to everyone but "me"
     socket.broadcast.to(room).emit('chat', generateMessage('Admin', `New user has joined`, room));
+
   });
 });
 
