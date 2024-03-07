@@ -1,6 +1,7 @@
 import displayMainPage from './displayMainPage';
 import updateChat from './updateChat.mjs';
 import sendChat from './sendChat.mjs';
+import createGameGrid from './displayGameGrid.js';
 import { socket } from '../main.js';
 
 export default function displayChatRoom(room) {
@@ -27,6 +28,12 @@ export default function displayChatRoom(room) {
   });
 
   navBar.append(title, roomName, leaveRoomBtn);
+
+  // create game grid container
+  const gridContainer = document.createElement('div');
+  gridContainer.id = 'grid-container';
+  gridContainer.classList.add('grid_container');
+  createGameGrid(gridContainer);
 
   // create container for messages
   const chatMainSection = document.createElement('div');
@@ -91,7 +98,7 @@ export default function displayChatRoom(room) {
 
   // add all elements to chatPage
   chatMainSection.append(sendMessageContainer, chatBox);
-  chatPage.append(navBar, chatMainSection);
+  chatPage.append(navBar, gridContainer, chatMainSection);
 
   console.log('chat rum:', room);
   socket.on('chat', (arg) => {

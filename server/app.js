@@ -75,6 +75,11 @@ io.on('connection', (socket) => {
     //send to everyone but "me"
     socket.broadcast.to(room).emit('chat', generateMessage('Admin', `New user has joined`, room));
 
+    // Hantera när en spelare klickar på en cell
+    socket.on('cellClicked', ({ row, col }) => {
+     // Här kan du lägga till logik för att hantera vilken spelare som klickade och uppdatera alla andra klienter
+     io.emit('updateCell', { row, col, color /* spelarens id eller färg */ });
+   });
   });
 });
 
