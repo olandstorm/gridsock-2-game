@@ -5,8 +5,8 @@ export default function createGameGrid(gridContainer) {
     
     //const gridContainer = document.getElementById('grid-container');
 
-    for (let x = 0; x < 15; x++) {
-        for (let y = 0; y < 15; y++) {
+    for (let x = 0; x < 25; x++) {
+        for (let y = 0; y < 25; y++) {
             const cell = document.createElement('div');
             cell.classList.add('cell');
             cell.dataset.row = x;
