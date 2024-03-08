@@ -1,10 +1,10 @@
 const app = require('express')();
 const server = require('http').createServer(app);
+const { randomUUID } = require('crypto');
 const usersRouter = require('./routes/users');
 const { selectColor } = require('./lib/colorAssign.js');
 const { generateMessage } = require('./lib/message.js');
 const express = require('express');
-
 
 app.use(express.json());
 app.use('/users', usersRouter);
@@ -21,15 +21,7 @@ const allRooms = [];
 const roomConnectedUsers = {};
 
 io.on('connection', (socket) => {
-
-  console.log(`User connected: ${socket.id}`);
-  //console.log("connection", socket)
-
-  
   socket.on('chat', (arg) => {
-    console.log('incoming chat', arg);
-    console.log('to room', arg.room);
-    console.log(`User ${socket.id} connected to rooms:`, socket.rooms);
     io.to(arg.room).emit(
       'chat',
       generateMessage(arg.user, arg.message, arg.room, arg.color)
@@ -43,58 +35,79 @@ io.on('connection', (socket) => {
 
   // Add the new room to the allRooms array
   socket.on('create room', (room) => {
-    allRooms.push(room);
+    const roomId = randomUUID();
+    allRooms.push({ name: room, roomId: roomId });
+    socket.emit('room object', { name: room, roomId: roomId });
   });
 
   // Allow the client to join specific room
   socket.on('join room', (room, username) => {
-    const color = selectColor(room);
+    const color = selectColor(room.roomId);
 
-    if (!roomConnectedUsers[room]) {
-      roomConnectedUsers[room] = [];
+    if (!roomConnectedUsers[room.roomId]) {
+      roomConnectedUsers[room.roomId] = [];
     }
 
-    // If the room does not include the username, push the username 
-    if (!roomConnectedUsers[room].includes(username)) {
-      roomConnectedUsers[room].push(username)
+    // If the room does not include the username, push the username
+    if (!roomConnectedUsers[room.roomId].includes(username)) {
+      roomConnectedUsers[room.roomId].push(username);
     }
 
+    console.log(roomConnectedUsers);
 
-    socket.join(room);
+    socket.join(room.roomId);
+
     io.emit('all players', roomConnectedUsers);
-    console.log('joined room:', room);
-    console.log(
-      `User ${socket.id} connected to rooms:`,
-      socket.rooms,
-      ' with color:',
-      color
-    );
+
     socket.emit('room joined', {
       room: room,
       color: color,
     });
-    
+
     //Send to ONE
-    io.to(socket.id).emit('chat', generateMessage('Admin', 'Welcome to Color Chaos!'));
-    
-     //After LOGIN is done we can change user to display name.
+    io.to(socket.id).emit(
+      'chat',
+      generateMessage('Admin', 'Welcome to Color Chaos!')
+    );
+
+    //After LOGIN is done we can change user to display name.
     //send to everyone but "me"
-    socket.broadcast.to(room).emit('chat', generateMessage('Admin', `New user has joined`, room));
+    socket.broadcast
+      .to(room.roomId)
+      .emit('chat', generateMessage('Admin', `New user has joined`, room.name));
+  });
 
-    // handle when a user clicks on a cell
-    socket.on('cellClicked', ({ row, col }) => {
+  // Hantera när en spelare klickar på en cell
+  socket.on('cellClicked', ({ row, col, color, roomId }) => {
+    // Här kan du lägga till logik för att hantera vilken spelare som klickade och uppdatera alla andra klienter
+    io.to(roomId).emit('updateCell', {
+      row,
+      col,
+      color /* spelarens id eller färg */,
+    });
+  });
+  // handle when a user clicks on a cell
+  socket.on('cellClicked', ({ row, col }) => {
+    io.emit('updateCell', { row, col, color });
+  });
 
-      io.emit('updateCell', { row, col, color });
-   });
+  socket.on('leave room', (room, username) => {
+    roomConnectedUsers[room.roomId] = roomConnectedUsers[room.roomId].filter(
+      (user) => user !== username
+    );
+    socket.leave(room.roomId);
 
-   socket.on('leave room', (room, username) => {
-    roomConnectedUsers[room] = roomConnectedUsers[room].filter(user => user !== username);
-    socket.leave(room);
     io.emit('all players', roomConnectedUsers);
-   })
-
+    console.log(roomConnectedUsers);
   });
 });
 
+io.of('/').adapter.on('join-room', (room, id) => {
+  console.log(`socket ${id} has joined room ${room}`);
+});
+
+io.of('/').adapter.on('leave-room', (room, id) => {
+  console.log(`socket ${id} has left room ${room}`);
+});
 
 server.listen(3000);

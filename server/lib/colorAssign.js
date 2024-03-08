@@ -12,7 +12,6 @@ function selectColor(room) {
     const randomIndex = Math.floor(Math.random() * roomColors.length);
     const color = roomColors.splice(randomIndex, 1)[0];
     assignedColors[room] = roomColors;
-    console.log(roomColors);
     return color;
   } else {
     return null;

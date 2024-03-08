@@ -1,4 +1,5 @@
 export default function updateChat(chat) {
+  console.log(chat);
   const chatList = document.querySelector('#chatList');
   const li = document.createElement('li');
   let user = chat.user;

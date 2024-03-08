@@ -1,6 +1,6 @@
 import { socket } from '../main.js';
 
-export default function createGameGrid(gridContainer) {
+export default function createGameGrid(gridContainer, roomId) {
   //const gridContainer = document.getElementById('grid-container');
 
   for (let x = 0; x < 25; x++) {
@@ -17,8 +17,9 @@ export default function createGameGrid(gridContainer) {
     const clickedCell = event.target;
     const row = clickedCell.dataset.row;
     const col = clickedCell.dataset.col;
+    const color = sessionStorage.getItem('color');
 
-    socket.emit('cellClicked', { row, col });
+    socket.emit('cellClicked', { row, col, color, roomId });
   });
 
   socket.on('updateCell', ({ row, col, color }) => {
