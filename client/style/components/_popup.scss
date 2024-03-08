@@ -1,0 +1,45 @@
+.popup_background {
+  z-index: 100;
+  position: fixed;
+  height: 100vh;
+  max-height: 100%;
+  max-width: 100%;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  background-color: rgba($color, 0.3);
+
+  .popup_container {
+    z-index: 300;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    min-height: 200px;
+    width: 80vw;
+    max-width: 450px;
+    padding: 30px 20px;
+    display: flex;
+    border: 1px solid #ffffff;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: $bg-color;
+    border-radius: 25px;
+
+    .popup_text {
+      width: 100%;
+      font-size: 1.3rem;
+    }
+  }
+
+  .instruction_popup {
+    background: $bg-gradient;
+    gap: 40px;
+    padding: 40px 40px 30px;
+    max-width: 650px;
+  }
+}

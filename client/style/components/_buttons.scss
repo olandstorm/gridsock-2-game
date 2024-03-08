@@ -1,0 +1,14 @@
+button {
+  background: $grad-bg;
+  border: 0.8px solid $btn-border-color;
+  color: $btn-text-color;
+  border-radius: 20px;
+  padding: 10px 20px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.5s ease;
+}
+
+button:active {
+  background-color: $btn-bg-active;
+}

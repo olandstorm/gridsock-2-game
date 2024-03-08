@@ -1,13 +1,16 @@
 import displayMainPage from './displayMainPage';
 
 export default function printStart() {
-  const body = document.body;
+  document.body.innerHTML = '';
 
-  body.innerHTML = '';
+  // create main container
+  const mainContainer = document.createElement('div');
+  mainContainer.classList.add('main_container');
 
   const logoBigImg = document.createElement('img');
-  /* logoImg.src = ''; */
+  logoBigImg.src = 'assets/img/colorchaos_logo.webp';
   logoBigImg.alt = 'Logotype for Color Chaos';
+  logoBigImg.classList.add('logo_img_big');
 
   const nameContainer = document.createElement('div');
   nameContainer.classList.add('name_container');
@@ -40,5 +43,8 @@ export default function printStart() {
 
   nameContainer.append(nameLabel, enterBtn);
 
-  body.append(logoBigImg, nameContainer);
+  mainContainer.append(logoBigImg, nameContainer);
+
+  // add mainContainer to body
+  document.body.append(mainContainer);
 }
