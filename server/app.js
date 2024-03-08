@@ -15,11 +15,9 @@ const allRooms = [];
 const roomConnectedUsers = {};
 
 io.on('connection', (socket) => {
-
   console.log(`User connected: ${socket.id}`);
   //console.log("connection", socket)
 
-  
   socket.on('chat', (arg) => {
     console.log('incoming chat', arg);
     console.log('to room', arg.room);
@@ -48,15 +46,15 @@ io.on('connection', (socket) => {
       roomConnectedUsers[room] = [];
     }
 
-    // If the room does not include the username, push the username 
+    // If the room does not include the username, push the username
     if (!roomConnectedUsers[room].includes(username)) {
-      roomConnectedUsers[room].push(username)
+      roomConnectedUsers[room].push(username);
     }
-
 
     socket.join(room);
     io.emit('all players', roomConnectedUsers);
-    console.log('joined room:', room);
+    const roomId = Array.from(socket.rooms)[0];
+    console.log('Room ID:', roomId);
     console.log(
       `User ${socket.id} connected to rooms:`,
       socket.rooms,
@@ -67,28 +65,33 @@ io.on('connection', (socket) => {
       room: room,
       color: color,
     });
-    
+
     //Send to ONE
-    io.to(socket.id).emit('chat', generateMessage('Admin', 'Welcome to Color Chaos!'));
-    
-     //After LOGIN is done we can change user to display name.
+    io.to(socket.id).emit(
+      'chat',
+      generateMessage('Admin', 'Welcome to Color Chaos!')
+    );
+
+    //After LOGIN is done we can change user to display name.
     //send to everyone but "me"
-    socket.broadcast.to(room).emit('chat', generateMessage('Admin', `New user has joined`, room));
+    socket.broadcast
+      .to(room)
+      .emit('chat', generateMessage('Admin', `New user has joined`, room));
 
     // Hantera när en spelare klickar på en cell
     socket.on('cellClicked', ({ row, col }) => {
-     // Här kan du lägga till logik för att hantera vilken spelare som klickade och uppdatera alla andra klienter
-     io.emit('updateCell', { row, col, color /* spelarens id eller färg */ });
-   });
+      // Här kan du lägga till logik för att hantera vilken spelare som klickade och uppdatera alla andra klienter
+      io.emit('updateCell', { row, col, color /* spelarens id eller färg */ });
+    });
 
-   socket.on('leave room', (room, username) => {
-    roomConnectedUsers[room] = roomConnectedUsers[room].filter(user => user !== username);
-    socket.leave(room);
-    io.emit('all players', roomConnectedUsers);
-   })
-
+    socket.on('leave room', (room, username) => {
+      roomConnectedUsers[room] = roomConnectedUsers[room].filter(
+        (user) => user !== username
+      );
+      socket.leave(room);
+      io.emit('all players', roomConnectedUsers);
+    });
   });
 });
-
 
 server.listen(3000);
