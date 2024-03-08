@@ -25,6 +25,7 @@ export default function displayChatRoom(room) {
   leaveRoomBtn.classList.add('leave_room_btn');
   leaveRoomBtn.innerText = 'Leave Room';
   leaveRoomBtn.addEventListener('click', () => {
+    console.log(room.roomId);
     socket.emit('leave room', room.roomId, sessionStorage.getItem('user'));
     updatePlayers(room);
     displayMainPage();
@@ -42,7 +43,7 @@ export default function displayChatRoom(room) {
   const gridContainer = document.createElement('div');
   gridContainer.id = 'grid-container';
   gridContainer.classList.add('grid_container');
-  createGameGrid(gridContainer);
+  createGameGrid(gridContainer, room.roomId);
 
   // create container for messages
   const chatMainSection = document.createElement('div');

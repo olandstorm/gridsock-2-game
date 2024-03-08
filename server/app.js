@@ -32,12 +32,11 @@ io.on('connection', (socket) => {
   socket.on('create room', (room) => {
     const roomId = randomUUID();
     allRooms.push({ name: room, roomId: roomId });
-    io.emit('room object', { name: room, roomId: roomId });
+    socket.emit('room object', { name: room, roomId: roomId });
   });
 
   // Allow the client to join specific room
   socket.on('join room', (room, username) => {
-    console.log(room);
     const color = selectColor(room.roomId);
 
     if (!roomConnectedUsers[room.roomId]) {
@@ -71,15 +70,21 @@ io.on('connection', (socket) => {
     socket.broadcast
       .to(room.roomId)
       .emit('chat', generateMessage('Admin', `New user has joined`, room.name));
+  });
 
-    // Hantera när en spelare klickar på en cell
-    socket.on('cellClicked', ({ row, col }) => {
-      // Här kan du lägga till logik för att hantera vilken spelare som klickade och uppdatera alla andra klienter
-      io.emit('updateCell', { row, col, color /* spelarens id eller färg */ });
+  // Hantera när en spelare klickar på en cell
+  socket.on('cellClicked', ({ row, col, color, roomId }) => {
+    // Här kan du lägga till logik för att hantera vilken spelare som klickade och uppdatera alla andra klienter
+    io.to(roomId).emit('updateCell', {
+      row,
+      col,
+      color /* spelarens id eller färg */,
     });
   });
 
   socket.on('leave room', (room, username) => {
+    console.log('room.roomid:', roomConnectedUsers[room.roomId]);
+    console.log('room:', roomConnectedUsers[room]);
     roomConnectedUsers[room.roomId] = roomConnectedUsers[room.roomId].filter(
       (user) => user !== username
     );

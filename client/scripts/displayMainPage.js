@@ -73,6 +73,7 @@ export default function displayMainPage() {
 
   socket.on('room joined', (data) => {
     currentColor = data.color;
+    sessionStorage.setItem('color', data.color);
   });
 
   // add all element to mainContainer
