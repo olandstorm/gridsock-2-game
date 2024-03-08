@@ -16,8 +16,7 @@ export default function updatePlayers(room) {
     } else {
       playerList.innerHTML = '';
     }
-
-    roomConnectedUsers[room].forEach((user) => {
+    roomConnectedUsers[room.roomId].forEach((user) => {
       const playerName = document.createElement('li');
       playerName.classList.add('player_name');
       playerName.innerText = user;

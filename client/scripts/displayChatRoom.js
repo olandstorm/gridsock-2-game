@@ -25,16 +25,16 @@ export default function displayChatRoom(room) {
   leaveRoomBtn.classList.add('leave_room_btn');
   leaveRoomBtn.innerText = 'Leave Room';
   leaveRoomBtn.addEventListener('click', () => {
-    socket.emit('leave room', room, sessionStorage.getItem('user'));
+    socket.emit('leave room', room.roomId, sessionStorage.getItem('user'));
     updatePlayers(room);
     displayMainPage();
   });
 
-  // When a user leaves the page, emit event and update player list
+  /*   // When a user leaves the page, emit event and update player list
   window.addEventListener('beforeunload', () => {
     socket.emit('leave room', room, sessionStorage.getItem('user'));
     updatePlayers(room);
-  });
+  }); */
 
   navBar.append(title, roomName, leaveRoomBtn);
 
@@ -78,7 +78,7 @@ export default function displayChatRoom(room) {
   chatList.id = 'chatList';
 
   // Updates the player list displayed in the UI based on the received roomConnectedUsers object.
-  updatePlayers(room);
+  updatePlayers(room.roomId);
 
   chatBox.appendChild(chatList);
 
@@ -86,9 +86,7 @@ export default function displayChatRoom(room) {
   chatMainSection.append(sendMessageContainer, chatBox);
   chatPage.append(navBar, gridContainer, chatMainSection);
 
-  console.log('chat rum:', room);
   socket.on('chat', (arg) => {
-    console.log('chat tillbaka:', arg);
     updateChat(arg);
   });
 

@@ -60,17 +60,18 @@ export default function displayMainPage() {
   createRoomBtn.classList.add('create_room_btn');
   createRoomBtn.innerText = 'Create and Enter';
   createRoomBtn.addEventListener('click', () => {
-    const userName = sessionStorage.getItem('user');
     const roomName = inputRoomName.value;
     if (roomName) {
       socket.emit('create room', roomName);
-      socket.emit('join room', roomName, userName);
-      displayChatRoom(roomName);
+      socket.on('room object', (room) => {
+        const userName = sessionStorage.getItem('user');
+        socket.emit('join room', room, userName);
+        displayChatRoom(room);
+      });
     }
   });
 
   socket.on('room joined', (data) => {
-    console.log('Room joined:', data);
     currentColor = data.color;
   });
 

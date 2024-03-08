@@ -16,13 +16,7 @@ const allRooms = [];
 const roomConnectedUsers = {};
 
 io.on('connection', (socket) => {
-  console.log(`User connected: ${socket.id}`);
-  //console.log("connection", socket)
-
   socket.on('chat', (arg) => {
-    console.log('incoming chat', arg);
-    console.log('to room', arg.room);
-    console.log(`User ${socket.id} connected to rooms:`, socket.rooms);
     io.to(arg.room).emit(
       'chat',
       generateMessage(arg.user, arg.message, arg.room, arg.color)
@@ -38,29 +32,29 @@ io.on('connection', (socket) => {
   socket.on('create room', (room) => {
     const roomId = randomUUID();
     allRooms.push({ name: room, roomId: roomId });
+    io.emit('room object', { name: room, roomId: roomId });
   });
 
   // Allow the client to join specific room
   socket.on('join room', (room, username) => {
-    const color = selectColor(room);
+    console.log(room);
+    const color = selectColor(room.roomId);
 
-    if (!roomConnectedUsers[room]) {
-      roomConnectedUsers[room] = [];
+    if (!roomConnectedUsers[room.roomId]) {
+      roomConnectedUsers[room.roomId] = [];
     }
 
     // If the room does not include the username, push the username
-    if (!roomConnectedUsers[room].includes(username)) {
-      roomConnectedUsers[room].push(username);
+    if (!roomConnectedUsers[room.roomId].includes(username)) {
+      roomConnectedUsers[room.roomId].push(username);
     }
 
-    socket.join(room);
+    console.log(roomConnectedUsers);
+
+    socket.join(room.roomId);
+
     io.emit('all players', roomConnectedUsers);
-    console.log(
-      `User ${socket.id} connected to rooms:`,
-      socket.rooms,
-      ' with color:',
-      color
-    );
+
     socket.emit('room joined', {
       room: room,
       color: color,
@@ -75,22 +69,22 @@ io.on('connection', (socket) => {
     //After LOGIN is done we can change user to display name.
     //send to everyone but "me"
     socket.broadcast
-      .to(room)
-      .emit('chat', generateMessage('Admin', `New user has joined`, room));
+      .to(room.roomId)
+      .emit('chat', generateMessage('Admin', `New user has joined`, room.name));
 
     // Hantera när en spelare klickar på en cell
     socket.on('cellClicked', ({ row, col }) => {
       // Här kan du lägga till logik för att hantera vilken spelare som klickade och uppdatera alla andra klienter
       io.emit('updateCell', { row, col, color /* spelarens id eller färg */ });
     });
+  });
 
-    socket.on('leave room', (room, username) => {
-      roomConnectedUsers[room] = roomConnectedUsers[room].filter(
-        (user) => user !== username
-      );
-      socket.leave(room);
-      io.emit('all players', roomConnectedUsers);
-    });
+  socket.on('leave room', (room, username) => {
+    roomConnectedUsers[room.roomId] = roomConnectedUsers[room.roomId].filter(
+      (user) => user !== username
+    );
+    socket.leave(room);
+    io.emit('all players', roomConnectedUsers);
   });
 });
 
