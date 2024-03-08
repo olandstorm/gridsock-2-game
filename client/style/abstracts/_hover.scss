@@ -1,0 +1,15 @@
+a:hover {
+  color: $a-hover;
+}
+a:visited:hover {
+  color: $a-hover;
+}
+
+button:hover {
+  background-color: $btn-bg-hover;
+  box-shadow: $outer-shadow;
+}
+
+input:hover {
+  background-color: $input-bg-hover;
+}
