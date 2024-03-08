@@ -1,6 +1,6 @@
 import { socket } from '../main.js';
 import updateRoomList from './updateRoomList';
-import displayChatRoom from './displayChatRoom';
+import displayChatRoom from './displayGameRoom.js';
 import createPopup from './lib/createPopup.mjs';
 
 let currentColor = null;
