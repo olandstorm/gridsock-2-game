@@ -63,7 +63,7 @@ export default function displayMainPage() {
     const roomName = inputRoomName.value;
     if (roomName) {
       socket.emit('create room', roomName);
-      socket.on('room object', (room) => {
+      socket.once('room object', (room) => {
         const userName = sessionStorage.getItem('user');
         socket.emit('join room', room, userName);
         displayChatRoom(room);

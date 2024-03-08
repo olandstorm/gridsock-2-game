@@ -83,14 +83,22 @@ io.on('connection', (socket) => {
   });
 
   socket.on('leave room', (room, username) => {
-    console.log('room.roomid:', roomConnectedUsers[room.roomId]);
-    console.log('room:', roomConnectedUsers[room]);
     roomConnectedUsers[room.roomId] = roomConnectedUsers[room.roomId].filter(
       (user) => user !== username
     );
-    socket.leave(room);
+    socket.leave(room.roomId);
+
     io.emit('all players', roomConnectedUsers);
+    console.log(roomConnectedUsers);
   });
+});
+
+io.of('/').adapter.on('join-room', (room, id) => {
+  console.log(`socket ${id} has joined room ${room}`);
+});
+
+io.of('/').adapter.on('leave-room', (room, id) => {
+  console.log(`socket ${id} has left room ${room}`);
 });
 
 server.listen(3000);
