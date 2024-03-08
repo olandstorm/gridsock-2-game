@@ -86,6 +86,13 @@ io.on('connection', (socket) => {
 
       io.emit('updateCell', { row, col, color });
    });
+
+   socket.on('leave room', (room, username) => {
+    roomConnectedUsers[room] = roomConnectedUsers[room].filter(user => user !== username);
+    socket.leave(room);
+    io.emit('all players', roomConnectedUsers);
+   })
+
   });
 });
 
