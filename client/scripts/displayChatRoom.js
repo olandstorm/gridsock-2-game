@@ -19,7 +19,7 @@ export default function displayChatRoom(room) {
   title.innerText = 'Color Chaos';
 
   const roomName = document.createElement('h3');
-  roomName.innerText = room;
+  roomName.innerText = room.name;
 
   const leaveRoomBtn = document.createElement('button');
   leaveRoomBtn.classList.add('leave_room_btn');
@@ -79,7 +79,6 @@ export default function displayChatRoom(room) {
 
   // Updates the player list displayed in the UI based on the received roomConnectedUsers object.
   updatePlayers(room);
-
 
   chatBox.appendChild(chatList);
 

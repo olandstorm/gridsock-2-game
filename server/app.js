@@ -31,8 +31,7 @@ io.on('connection', (socket) => {
 
   // Send list of all rooms to every client
   socket.on('get rooms', () => {
-    const roomNames = allRooms.map((room) => room.name);
-    io.emit('room list', roomNames);
+    io.emit('room list', allRooms);
   });
 
   // Add the new room to the allRooms array
