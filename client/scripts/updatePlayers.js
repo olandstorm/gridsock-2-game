@@ -6,8 +6,8 @@ export default function updatePlayers(room) {
     let chatList = document.getElementById('chatList');
     let playerList = document.querySelector('.player_list');
 
-    if (!chatList) {
-      console.log('no exist');
+    if (!classList) {
+      return;
     }
 
     if (!playerList) {
