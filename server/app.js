@@ -5,7 +5,9 @@ const usersRouter = require('./routes/users');
 const { selectColor } = require('./lib/colorAssign.js');
 const { generateMessage } = require('./lib/message.js');
 const express = require('express');
+const cors = require('cors');
 
+app.use(cors());
 app.use(express.json());
 app.use('/users', usersRouter);
 
