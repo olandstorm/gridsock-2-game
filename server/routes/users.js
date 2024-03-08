@@ -52,6 +52,7 @@ router.post('/add', (req, res) => {
     });
 });
 
+//GET user listing
 router.get('/', (req, res) => {
     const query = 'SELECT * FROM users';
     connection.query(query, (err, data) => {
@@ -61,6 +62,50 @@ router.get('/', (req, res) => {
         res.status(400).json(data);
     });
 });
+
+//Login user
+router.post('/login', (req, res) => {
+    const { email, password } = req.body;
+    console.log('client password', req.body);
+
+    if (email) {
+        if (!email.includes('@')) {
+            res.status(400).json({message: 'Invalid email address'});
+            return;
+        }
+
+        let queryDbPassword = 'SELECT userPassword, UUID, userName FROM users WHERE userEmail = ?';
+        connection.query(queryDbPassword, [email], (passwordErr, dbPasswordResult) => {
+            if (passwordErr) {
+                console.log('Error with query', passwordErr);
+                res.status(500).json({ error: 'Internal server error'});
+                return;
+            }
+            if (dbPasswordResult.length === 0) {
+                res.status(404).json({ message: 'User not found' });
+                return;
+            }
+
+            const dbPassword = dbPasswordResult[0].userPassword;
+            const dbUserName = dbPasswordResult[0].userName;
+            const dbUUID = dbPasswordResult[0].UUID;
+            //console.log('dbPassword result: ', dbPasswordResult[0].userPassword);
+            //console.log('saltvärder', process.env.SALT_KEY);
+            let decryptedPassword = CryptoJS.AES.decrypt(dbPassword, process.env.SALT_KEY).toString(CryptoJS.enc.Utf8);
+            if (decryptedPassword === password) {
+                res.json({UUID: dbUUID, name: dbUserName });
+                return;
+            } else {
+                res.status(401).json({ message: 'Incorrect password' });
+                return;
+            }
+        });
+    } else {
+        res.status(404).json({ message: 'Please enter email' });
+        return;
+    }
+});
+
 
 
 
