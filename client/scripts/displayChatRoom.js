@@ -2,6 +2,7 @@ import displayMainPage from './displayMainPage';
 import updateChat from './updateChat.mjs';
 import sendChat from './sendChat.mjs';
 import createGameGrid from './displayGameGrid.js';
+import updatePlayers from './updatePlayers.js';
 import { socket } from '../main.js';
 
 export default function displayChatRoom(room) {
@@ -24,7 +25,15 @@ export default function displayChatRoom(room) {
   leaveRoomBtn.classList.add('leave_room_btn');
   leaveRoomBtn.innerText = 'Leave Room';
   leaveRoomBtn.addEventListener('click', () => {
+    socket.emit('leave room', room, sessionStorage.getItem('user'));
+    updatePlayers(room);
     displayMainPage();
+  });
+
+  // When a user leaves the page, emit event and update player list
+  window.addEventListener('beforeunload', () => {
+    socket.emit('leave room', room, sessionStorage.getItem('user'));
+    updatePlayers(room);
   });
 
   navBar.append(title, roomName, leaveRoomBtn);
@@ -69,29 +78,7 @@ export default function displayChatRoom(room) {
   chatList.id = 'chatList';
 
   // Updates the player list displayed in the UI based on the received roomConnectedUsers object.
-  socket.on('all players', (roomConnectedUsers) => {
-    let playerList = document.querySelector('.player_list');
-
-    if (!playerList) {
-      playerList = document.createElement('ul');
-      playerList.classList.add('player_list');
-    }
-
-    else {
-      playerList.innerHTML = '';
-    }
-
-    roomConnectedUsers[room].forEach(user => {
-      const playerName = document.createElement('li');
-      playerName.classList.add('player_name');
-      playerName.innerText = user;
-
-      playerList.appendChild(playerName);
-    })
-
-    chatList.appendChild(playerList);
-    
-});
+  updatePlayers(room);
 
 
   chatBox.appendChild(chatList);

@@ -80,6 +80,13 @@ io.on('connection', (socket) => {
      // Här kan du lägga till logik för att hantera vilken spelare som klickade och uppdatera alla andra klienter
      io.emit('updateCell', { row, col, color /* spelarens id eller färg */ });
    });
+
+   socket.on('leave room', (room, username) => {
+    roomConnectedUsers[room] = roomConnectedUsers[room].filter(user => user !== username);
+    socket.leave(room);
+    io.emit('all players', roomConnectedUsers);
+   })
+
   });
 });
 
