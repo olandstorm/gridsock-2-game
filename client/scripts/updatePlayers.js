@@ -6,7 +6,7 @@ export default function updatePlayers(room) {
     let chatList = document.getElementById('chatList');
     let playerList = document.querySelector('.player_list');
 
-    if (!classList) {
+    if (!chatList) {
       return;
     }
 
