@@ -1,5 +1,6 @@
 const app = require('express')();
 const server = require('http').createServer(app);
+const { randomUUID } = require('crypto');
 const { selectColor } = require('./lib/colorAssign.js');
 const { generateMessage } = require('./lib/message.js');
 
@@ -30,12 +31,14 @@ io.on('connection', (socket) => {
 
   // Send list of all rooms to every client
   socket.on('get rooms', () => {
-    io.emit('room list', allRooms);
+    const roomNames = allRooms.map((room) => room.name);
+    io.emit('room list', roomNames);
   });
 
   // Add the new room to the allRooms array
   socket.on('create room', (room) => {
-    allRooms.push(room);
+    const roomId = randomUUID();
+    allRooms.push({ name: room, roomId: roomId });
   });
 
   // Allow the client to join specific room
@@ -53,8 +56,6 @@ io.on('connection', (socket) => {
 
     socket.join(room);
     io.emit('all players', roomConnectedUsers);
-    const roomId = Array.from(socket.rooms)[0];
-    console.log('Room ID:', roomId);
     console.log(
       `User ${socket.id} connected to rooms:`,
       socket.rooms,
