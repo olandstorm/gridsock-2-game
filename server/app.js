@@ -1,8 +1,13 @@
 const app = require('express')();
 const server = require('http').createServer(app);
 const { randomUUID } = require('crypto');
+const usersRouter = require('./routes/users');
 const { selectColor } = require('./lib/colorAssign.js');
 const { generateMessage } = require('./lib/message.js');
+const express = require('express');
+
+app.use(express.json());
+app.use('/users', usersRouter);
 
 const io = require('socket.io')(server, {
   cors: {
@@ -80,6 +85,10 @@ io.on('connection', (socket) => {
       col,
       color /* spelarens id eller färg */,
     });
+  });
+  // handle when a user clicks on a cell
+  socket.on('cellClicked', ({ row, col }) => {
+    io.emit('updateCell', { row, col, color });
   });
 
   socket.on('leave room', (room, username) => {

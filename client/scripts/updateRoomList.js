@@ -1,5 +1,5 @@
 import { socket } from '../main.js';
-import displayChatRoom from './displayChatRoom';
+import displayChatRoom from './displayGameRoom.js';
 
 export default function updateRoomList(rooms) {
   const roomsContainer = document.querySelector('.rooms_container');
