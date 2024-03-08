@@ -1,6 +1,6 @@
 import './style.scss';
 import { io } from 'socket.io-client';
-import printStart from './scripts/printStart.mjs';
+import printStart from './scripts/displayStartPage.js';
 import displayMainPage from './scripts/displayMainPage';
 export const socket = io('http://localhost:3000');
 

@@ -1,6 +1,6 @@
-import displayMainPage from './displayMainPage';
-import updateChat from './updateChat.mjs';
-import sendChat from './sendChat.mjs';
+import displayMainPage from './displayMainPage.js';
+import updateChat from './updateChat.js';
+import sendChat from './sendChat.js';
 import createGameGrid from './displayGameGrid.js';
 import { socket } from '../main.js';
 
