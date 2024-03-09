@@ -18,4 +18,4 @@ function selectColor(room) {
   }
 }
 
-module.exports = { selectColor };
+module.exports = { selectColor, assignedColors };
