@@ -2,7 +2,7 @@ const app = require('express')();
 const server = require('http').createServer(app);
 const { randomUUID } = require('crypto');
 const usersRouter = require('./routes/users');
-const { selectColor } = require('./lib/colorAssign.js');
+const { selectColor, assignedColors } = require('./lib/colorAssign.js');
 const { generateMessage } = require('./lib/message.js');
 const express = require('express');
 
@@ -91,7 +91,11 @@ io.on('connection', (socket) => {
     io.emit('updateCell', { row, col, color });
   });
 
-  socket.on('leave room', (room, username) => {
+  socket.on('leave room', (room, username, color) => {
+
+    // Push back the color in assignedColors so it can be available again
+    assignedColors[room.roomId].push(color);
+
     roomConnectedUsers[room.roomId] = roomConnectedUsers[room.roomId].filter(
       (user) => user !== username
     );
