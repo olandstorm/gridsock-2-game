@@ -33,7 +33,7 @@ export default function displayChatRoom(room) {
 
   /*   // When a user leaves the page, emit event and update player list
   window.addEventListener('beforeunload', () => {
-    socket.emit('leave room', room, sessionStorage.getItem('user'));
+    socket.emit('leave room', room, sessionStorage.getItem('user'), sessionStorage.getItem('color'));
     updatePlayers(room);
   }); */
 
