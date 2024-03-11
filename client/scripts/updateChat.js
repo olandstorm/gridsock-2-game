@@ -3,7 +3,7 @@ export default function updateChat(chat) {
   const chatList = document.querySelector('#chatList');
   const li = document.createElement('li');
   let user = chat.user;
-  const savedUser = sessionStorage.getItem('user');
+  const savedUser = localStorage.getItem('user');
   let color = chat.color;
 
   li.classList.add('msg_color_' + color);

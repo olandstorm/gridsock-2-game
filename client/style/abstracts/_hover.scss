@@ -13,3 +13,10 @@ button:hover {
 input:hover {
   background-color: $input-bg-hover;
 }
+
+.new_user_btn:hover,
+.back_to_login_btn:hover {
+  background-color: transparent;
+  box-shadow: none;
+  color: $color;
+}

@@ -4,142 +4,160 @@ import sendChat from './sendChat.js';
 import createGameGrid from './displayGameGrid.js';
 import updatePlayers from './updatePlayers.js';
 import { socket } from '../main.js';
+import printStart from './displayStartPage.js';
 import createPopup from './lib/createPopup.mjs';
 
 export default function displayChatRoom(room) {
-	document.body.innerHTML = '';
+  document.body.innerHTML = '';
 
-	const chatPage = document.createElement('div');
-	chatPage.classList.add('chat_page');
+  const chatPage = document.createElement('div');
+  chatPage.classList.add('chat_page');
 
-	// create nav element
-	const navBar = document.createElement('nav');
-	navBar.classList.add('nav_bar');
+  // create nav element
+  const navBar = document.createElement('nav');
+  navBar.classList.add('nav_bar');
 
-	const title = document.createElement('h2');
-	title.innerText = 'Color Chaos';
+  const title = document.createElement('h2');
+  title.innerText = 'Color Chaos';
 
-	const roomName = document.createElement('h3');
-	roomName.innerText = room.name;
+  const roomName = document.createElement('h3');
+  roomName.innerText = room.name;
 
-	const leaveRoomBtn = document.createElement('button');
-	leaveRoomBtn.classList.add('leave_room_btn');
-	leaveRoomBtn.innerText = 'Leave Room';
-	leaveRoomBtn.addEventListener('click', () => {
-		console.log(room.roomId);
-		socket.emit(
-			'leave room',
-			room,
-			sessionStorage.getItem('user'),
-			sessionStorage.getItem('color')
-		);
-		updatePlayers(room.roomId);
-		displayMainPage();
-		socket.removeAllListeners('chat');
-	});
+  const leaveRoomBtn = document.createElement('button');
+  leaveRoomBtn.classList.add('leave_room_btn');
+  leaveRoomBtn.innerText = 'Leave Room';
+  leaveRoomBtn.addEventListener('click', () => {
+    console.log(room.roomId);
+    socket.emit(
+      'leave room',
+      room,
+      localStorage.getItem('user'),
+      sessionStorage.getItem('color')
+    );
+    updatePlayers(room.roomId);
+    displayMainPage();
+    socket.removeAllListeners('chat');
+    sessionStorage.removeItem('color');
+  });
 
-	/*   // When a user leaves the page, emit event and update player list
+  /*   // When a user leaves the page, emit event and update player list
   window.addEventListener('beforeunload', () => {
-    socket.emit('leave room', room, sessionStorage.getItem('user'), sessionStorage.getItem('color'));
+    socket.emit('leave room', room, localStorage.getItem('user'), sessionStorage.getItem('color'));
     updatePlayers(room);
   }); */
 
-	navBar.append(title, roomName, leaveRoomBtn);
+  const logoutBtn = document.createElement('button');
+  logoutBtn.innerText = 'Log out';
+  logoutBtn.addEventListener('click', () => {
+    localStorage.clear();
+    sessionStorage.clear();
+    printStart();
+  });
 
-	// create game grid container
-	const gridContainer = document.createElement('div');
-	gridContainer.id = 'grid-container';
-	gridContainer.classList.add('grid_container');
+  const topBtnsContainer = document.createElement('div');
+  topBtnsContainer.classList.add('top_btns_container');
+  topBtnsContainer.append(leaveRoomBtn, logoutBtn);
 
-	const startGameBtn = document.createElement('button');
-	startGameBtn.id = 'startGameBtn';
-	startGameBtn.innerText = 'Start Game';
+  const stickyContainer = document.createElement('div');
+  stickyContainer.classList.add('sticky_container');
+  stickyContainer.appendChild(topBtnsContainer);
 
-	startGameBtn.addEventListener('click', () => {
-		//start timer
-		socket.emit('startGame');
-	});
+  document.body.append(stickyContainer);
+  navBar.append(title, roomName);
 
-	// create container for messages
-	const chatMainSection = document.createElement('div');
-	chatMainSection.classList.add('chat_main_section');
+  // create game grid container
+  const gridContainer = document.createElement('div');
+  gridContainer.id = 'grid-container';
+  gridContainer.classList.add('grid_container');
 
-	const sendMessageContainer = document.createElement('div');
-	sendMessageContainer.classList.add('send_message_container');
+  const startGameBtn = document.createElement('button');
+  startGameBtn.id = 'startGameBtn';
+  startGameBtn.innerText = 'Start Game';
 
-	const inputLabel = document.createElement('label');
-	inputLabel.innerText = 'Message:';
+  startGameBtn.addEventListener('click', () => {
+    //start timer
+    socket.emit('startGame');
+  });
 
-	const inputMessage = document.createElement('input');
-	inputMessage.classList.add('input_message');
-	inputMessage.type = 'text';
-	inputMessage.id = 'inputMessage';
+  // create container for messages
+  const chatMainSection = document.createElement('div');
+  chatMainSection.classList.add('chat_main_section');
 
-	const sendMessageBtn = document.createElement('button');
-	sendMessageBtn.classList.add('send_message_button');
-	sendMessageBtn.id = 'sendMessageBtn';
-	sendMessageBtn.innerText = 'SEND';
-	sendMessageBtn.addEventListener('click', () => {
-		sendChat(inputMessage, room);
-		inputMessage.value = '';
-	});
+  const sendMessageContainer = document.createElement('div');
+  sendMessageContainer.classList.add('send_message_container');
 
-	sendMessageContainer.append(inputLabel, inputMessage, sendMessageBtn);
+  const inputLabel = document.createElement('label');
+  inputLabel.innerText = 'Message:';
 
-	// create chat box
-	const chatBox = document.createElement('div');
-	chatBox.classList.add('chat_box');
+  const inputMessage = document.createElement('input');
+  inputMessage.classList.add('input_message');
+  inputMessage.type = 'text';
+  inputMessage.id = 'inputMessage';
 
-	const chatList = document.createElement('ul');
-	chatList.id = 'chatList';
+  const sendMessageBtn = document.createElement('button');
+  sendMessageBtn.classList.add('send_message_button');
+  sendMessageBtn.id = 'sendMessageBtn';
+  sendMessageBtn.innerText = 'SEND';
+  sendMessageBtn.addEventListener('click', () => {
+    sendChat(inputMessage, room);
+    inputMessage.value = '';
+  });
 
-	// Updates the player list displayed in the UI based on the received roomConnectedUsers object.
-	updatePlayers(room.roomId);
+  sendMessageContainer.append(inputLabel, inputMessage, sendMessageBtn);
 
-	chatBox.appendChild(chatList);
+  // create chat box
+  const chatBox = document.createElement('div');
+  chatBox.classList.add('chat_box');
 
-	// add all elements to chatPage
-	chatMainSection.append(sendMessageContainer, chatBox);
-	chatPage.append(navBar, startGameBtn, gridContainer, chatMainSection);
+  const chatList = document.createElement('ul');
+  chatList.id = 'chatList';
 
-	let gameTimer;
-	let remainingTime;
-	//Listen to timeinfo from server
-	socket.on('gameDuration', (duration) => {
-		remainingTime = duration;
-		startTimer();
-	});
+  // Updates the player list displayed in the UI based on the received roomConnectedUsers object.
+  updatePlayers(room.roomId);
 
-	//Start timer client side
-	function startTimer() {
-		gameTimer = setInterval(() => {
-			remainingTime -= 1000;
-			console.log('game timer', remainingTime);
-			if (remainingTime <= 0) {
-				clearInterval(gameTimer);
-				//Tell server time is up?
-				socket.emit('endGame');
-				
-			}
-		}, 1000);
-	}
+  chatBox.appendChild(chatList);
 
-	//Listen to when game ends from server
-	socket.on('gameEnd', () => {
-		//Additional functions...score, save board etc
-		clearInterval(gameTimer);
-		createPopup('Times up!');
-	});
+  // add all elements to chatPage
+  chatMainSection.append(sendMessageContainer, chatBox);
+  chatPage.append(navBar, startGameBtn, gridContainer, chatMainSection);
 
-	socket.on('chat', (arg) => {
-		updateChat(arg);
-	});
+  let gameTimer;
+  let remainingTime;
+  //Listen to timeinfo from server
+  socket.on('gameDuration', (duration) => {
+    remainingTime = duration;
+    startTimer();
+  });
 
-	//Listen to when game starts from server
-	socket.on('gameStart', () => {
-		//display game grid
-		createGameGrid(gridContainer, room.roomId);
-	});
+  //Start timer client side
+  function startTimer() {
+    gameTimer = setInterval(() => {
+      remainingTime -= 1000;
+      console.log('game timer', remainingTime);
+      if (remainingTime <= 0) {
+        clearInterval(gameTimer);
+        //Tell server time is up?
+        socket.emit('endGame');
+      }
+    }, 1000);
+  }
 
-	document.body.appendChild(chatPage);
+  //Listen to when game ends from server
+  socket.on('gameEnd', () => {
+    //Additional functions...score, save board etc
+    clearInterval(gameTimer);
+    createPopup('Times up!');
+  });
+
+  socket.on('chat', (arg) => {
+    updateChat(arg);
+  });
+
+  //Listen to when game starts from server
+  socket.on('gameStart', () => {
+    //display game grid
+    createGameGrid(gridContainer, room.roomId);
+  });
+
+  document.body.appendChild(chatPage);
 }

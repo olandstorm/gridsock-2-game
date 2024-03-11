@@ -1,5 +1,5 @@
 button {
-  background: $grad-bg;
+  background: $btn-bg-color $grad-bg;
   border: 0.8px solid $btn-border-color;
   color: $btn-text-color;
   border-radius: 20px;
@@ -11,4 +11,21 @@ button {
 
 button:active {
   background-color: $btn-bg-active;
+}
+
+.new_user_btn,
+.back_to_login_btn {
+  background: none;
+  border: none;
+  transition: none;
+  margin-top: 50px;
+}
+
+.new_user_btn:active,
+.back_to_login_btn:active {
+  background-color: transparent;
+}
+
+.create_enter_btn {
+  margin-top: 20px;
 }

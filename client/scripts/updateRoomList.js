@@ -3,7 +3,7 @@ import displayChatRoom from './displayGameRoom.js';
 
 export default function updateRoomList(rooms) {
   const roomsContainer = document.querySelector('.rooms_container');
-  const userName = sessionStorage.getItem('user');
+  const userName = localStorage.getItem('user');
   if (roomsContainer) {
     roomsContainer.innerHTML = '';
 

@@ -1,4 +1,7 @@
 import displayMainPage from './displayMainPage';
+import displayNewUser from './displayNewUser.js';
+import createPopup from './lib/createPopup.mjs';
+import loginUser from './loginUser.js';
 
 export default function printStart() {
   document.body.innerHTML = '';
@@ -12,22 +15,38 @@ export default function printStart() {
   logoBigImg.alt = 'Logotype for Color Chaos';
   logoBigImg.classList.add('logo_img_big');
 
-  const nameContainer = document.createElement('div');
-  nameContainer.classList.add('name_container');
+  const loginContainer = document.createElement('div');
+  loginContainer.classList.add('login_container');
 
-  const nameLabel = document.createElement('label');
-  nameLabel.classList.add('name_label');
+  const emailLabel = document.createElement('label');
+  emailLabel.classList.add('login_label');
 
-  const nameSpan = document.createElement('span');
-  nameSpan.classList.add('name_span');
+  const emailSpan = document.createElement('span');
+  emailSpan.classList.add('login_label_span');
+  emailSpan.innerText = 'Email:';
 
-  const nameInput = document.createElement('input');
-  nameInput.type = 'text';
-  nameInput.classList.add('user_name_input');
-  nameInput.id = 'userName';
-  nameInput.placeholder = 'Name';
+  const emailInput = document.createElement('input');
+  emailInput.type = 'text';
+  emailInput.classList.add('user_email_input');
+  emailInput.id = 'userEmailInput';
+  emailInput.placeholder = 'Email';
 
-  nameLabel.append(nameSpan, nameInput);
+  emailLabel.append(emailSpan, emailInput);
+
+  const passwordLabel = document.createElement('label');
+  passwordLabel.classList.add('login_label');
+
+  const passwordSpan = document.createElement('span');
+  passwordSpan.classList.add('login_label_span');
+  passwordSpan.innerText = 'Password:';
+
+  const passwordInput = document.createElement('input');
+  passwordInput.type = 'password';
+  passwordInput.classList.add('user_password_input');
+  passwordInput.id = 'userPasswordInput';
+  passwordInput.placeholder = 'Password';
+
+  passwordLabel.append(passwordSpan, passwordInput);
 
   const enterBtn = document.createElement('button');
   enterBtn.innerText = 'Enter';
@@ -35,15 +54,29 @@ export default function printStart() {
   enterBtn.id = 'saveUser';
 
   enterBtn.addEventListener('click', () => {
-    let userName = nameInput.value;
-    sessionStorage.setItem('user', userName);
-    nameInput.value = '';
-    displayMainPage();
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+
+    if (!email || !password) {
+      createPopup('Please fill in both email and password fields');
+      return;
+    } else {
+      loginUser(email, password);
+    }
   });
 
-  nameContainer.append(nameLabel, enterBtn);
+  const newUserBtn = document.createElement('button');
+  newUserBtn.innerText = 'Create a new user';
+  newUserBtn.classList.add('new_user_btn');
+  newUserBtn.id = 'newUser';
 
-  mainContainer.append(logoBigImg, nameContainer);
+  newUserBtn.addEventListener('click', () => {
+    displayNewUser(loginContainer);
+  });
+
+  loginContainer.append(emailLabel, passwordLabel, enterBtn, newUserBtn);
+
+  mainContainer.append(logoBigImg, loginContainer);
 
   // add mainContainer to body
   document.body.append(mainContainer);

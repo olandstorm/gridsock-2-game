@@ -5,8 +5,10 @@ const usersRouter = require('./routes/users');
 const { selectColor, assignedColors } = require('./lib/colorAssign.js');
 const { generateMessage } = require('./lib/message.js');
 const express = require('express');
+const cors = require('cors');
 const gameRoom = require('./lib/gameRoom.js');
 
+app.use(cors());
 app.use(express.json());
 app.use('/users', usersRouter);
 
@@ -16,8 +18,6 @@ const io = require('socket.io')(server, {
     methods: ['GET', 'POST'],
   },
 });
-
-
 
 // List of all rooms
 const allRooms = [];

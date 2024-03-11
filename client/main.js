@@ -5,7 +5,7 @@ import displayMainPage from './scripts/displayMainPage';
 export const socket = io('http://localhost:3000');
 
 // User state check
-if (sessionStorage.getItem('user')) {
+if (localStorage.getItem('user')) {
   displayMainPage();
 } else {
   printStart();
