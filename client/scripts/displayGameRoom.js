@@ -34,7 +34,8 @@ export default function displayChatRoom(room) {
     );
     updatePlayers(room.roomId);
     displayMainPage();
-    socket.removeAllListeners();
+    socket.removeAllListeners('chat');
+    sessionStorage.removeItem('color');
   });
 
   /*   // When a user leaves the page, emit event and update player list
@@ -43,7 +44,24 @@ export default function displayChatRoom(room) {
     updatePlayers(room);
   }); */
 
-  navBar.append(title, roomName, leaveRoomBtn);
+  const logoutBtn = document.createElement('button');
+  logoutBtn.innerText = 'Log out';
+  logoutBtn.addEventListener('click', () => {
+    localStorage.clear();
+    sessionStorage.clear();
+    printStart();
+  });
+
+  const topBtnsContainer = document.createElement('div');
+  topBtnsContainer.classList.add('top_btns_container');
+  topBtnsContainer.append(leaveRoomBtn, logoutBtn);
+
+  const stickyContainer = document.createElement('div');
+  stickyContainer.classList.add('sticky_container');
+  stickyContainer.appendChild(topBtnsContainer);
+
+  document.body.append(stickyContainer);
+  navBar.append(title, roomName);
 
   // create game grid container
   const gridContainer = document.createElement('div');

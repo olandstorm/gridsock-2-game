@@ -2,6 +2,7 @@ import { socket } from '../main.js';
 import updateRoomList from './updateRoomList';
 import displayChatRoom from './displayGameRoom.js';
 import createPopup from './lib/createPopup.mjs';
+import printStart from './displayStartPage.js';
 
 let currentColor = null;
 
@@ -48,9 +49,17 @@ export default function displayMainPage() {
     );
   });
 
+  const logoutBtn = document.createElement('button');
+  logoutBtn.innerText = 'Log out';
+  logoutBtn.addEventListener('click', () => {
+    localStorage.clear();
+    sessionStorage.clear();
+    printStart();
+  });
+
   const topBtnsContainer = document.createElement('div');
   topBtnsContainer.classList.add('top_btns_container');
-  topBtnsContainer.appendChild(instructionBtn);
+  topBtnsContainer.append(instructionBtn, logoutBtn);
 
   const stickyContainer = document.createElement('div');
   stickyContainer.classList.add('sticky_container');
