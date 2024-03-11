@@ -1,5 +1,5 @@
 const gameRoom = {
-    handleConnection: (socket) => {
+    handleConnection: (socket, io) => {
         //connections to game room
         //Listen to when a player click start button
         socket.on('startGame', () => {
@@ -10,6 +10,13 @@ const gameRoom = {
             }
         });
         
+        //Listen to when time is up.
+        socket.on('endGame', () => {
+            if (gameStarted) {
+                endGameSession();
+            }
+        }); 
+
         //Listen to when a player disconnects and end game session if noone is left
         socket.on('disconnect', () => {
             if (gameStarted && io.engine.clientsCount === 0) {
@@ -18,7 +25,7 @@ const gameRoom = {
         });
        
         let gameStarted = false;
-        let gameDuration = 1 * 60 * 1000;
+        let gameDuration = 1 * 20 * 1000;
         
         function startGameSession() {
             gameStarted = true;
