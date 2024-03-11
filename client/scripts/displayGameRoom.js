@@ -5,6 +5,7 @@ import createGameGrid from './displayGameGrid.js';
 import updatePlayers from './updatePlayers.js';
 import { socket } from '../main.js';
 import printStart from './displayStartPage.js';
+import createPopup from './lib/createPopup.mjs';
 
 export default function displayChatRoom(room) {
   document.body.innerHTML = '';
@@ -68,7 +69,15 @@ export default function displayChatRoom(room) {
   const gridContainer = document.createElement('div');
   gridContainer.id = 'grid-container';
   gridContainer.classList.add('grid_container');
-  createGameGrid(gridContainer, room.roomId);
+
+  const startGameBtn = document.createElement('button');
+  startGameBtn.id = 'startGameBtn';
+  startGameBtn.innerText = 'Start Game';
+
+  startGameBtn.addEventListener('click', () => {
+    //start timer
+    socket.emit('startGame');
+  });
 
   // create container for messages
   const chatMainSection = document.createElement('div');
@@ -110,10 +119,44 @@ export default function displayChatRoom(room) {
 
   // add all elements to chatPage
   chatMainSection.append(sendMessageContainer, chatBox);
-  chatPage.append(navBar, gridContainer, chatMainSection);
+  chatPage.append(navBar, startGameBtn, gridContainer, chatMainSection);
+
+  let gameTimer;
+  let remainingTime;
+  //Listen to timeinfo from server
+  socket.on('gameDuration', (duration) => {
+    remainingTime = duration;
+    startTimer();
+  });
+
+  //Start timer client side
+  function startTimer() {
+    gameTimer = setInterval(() => {
+      remainingTime -= 1000;
+      console.log('game timer', remainingTime);
+      if (remainingTime <= 0) {
+        clearInterval(gameTimer);
+        //Tell server time is up?
+        socket.emit('endGame');
+      }
+    }, 1000);
+  }
+
+  //Listen to when game ends from server
+  socket.on('gameEnd', () => {
+    //Additional functions...score, save board etc
+    clearInterval(gameTimer);
+    createPopup('Times up!');
+  });
 
   socket.on('chat', (arg) => {
     updateChat(arg);
+  });
+
+  //Listen to when game starts from server
+  socket.on('gameStart', () => {
+    //display game grid
+    createGameGrid(gridContainer, room.roomId);
   });
 
   document.body.appendChild(chatPage);
