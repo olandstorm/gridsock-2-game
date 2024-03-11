@@ -1,7 +1,11 @@
 import { socket } from '../main.js';
 
-export default function createGameGrid(gridContainer, roomId) {
-  //const gridContainer = document.getElementById('grid-container');
+export default function createGameGrid(
+  gridContainer,
+  roomId,
+  beforeGameContainer
+) {
+  beforeGameContainer.remove();
 
   for (let x = 0; x < 25; x++) {
     for (let y = 0; y < 25; y++) {

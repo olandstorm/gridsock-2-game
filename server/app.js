@@ -24,7 +24,7 @@ const allRooms = [];
 const roomConnectedUsers = {};
 
 io.on('connection', (socket) => {
-  gameRoom.handleConnection(socket, io);
+  gameRoom.handleConnection(socket, io, roomConnectedUsers);
 
   socket.on('chat', (arg) => {
     io.to(arg.room).emit(
@@ -55,8 +55,16 @@ io.on('connection', (socket) => {
     }
 
     // If the room does not include the username, push the username
-    if (!roomConnectedUsers[room.roomId].includes(username)) {
-      roomConnectedUsers[room.roomId].push(username);
+    if (
+      !roomConnectedUsers[room.roomId].includes({
+        name: username,
+        userId: socket.id,
+      })
+    ) {
+      roomConnectedUsers[room.roomId].push({
+        name: username,
+        userId: socket.id,
+      });
     }
 
     console.log(roomConnectedUsers);
@@ -81,6 +89,14 @@ io.on('connection', (socket) => {
     socket.broadcast
       .to(room.roomId)
       .emit('chat', generateMessage('Admin', `New user has joined`, room.name));
+
+    //Disable button if theres 4 players in room
+    const playersInRoom = roomConnectedUsers[room.roomId].length;
+    if (playersInRoom >= 4) {
+      socket.broadcast.emit('room full', room.roomId);
+    } else if (playersInRoom === 4) {
+      io.emit('enable start');
+    }
   });
 
   // Hantera när en spelare klickar på en cell
@@ -98,12 +114,22 @@ io.on('connection', (socket) => {
     assignedColors[room.roomId].push(color);
 
     roomConnectedUsers[room.roomId] = roomConnectedUsers[room.roomId].filter(
-      (user) => user !== username
+      (user) => user.name !== username
     );
     socket.leave(room.roomId);
 
     io.emit('all players', roomConnectedUsers);
     console.log(roomConnectedUsers);
+
+    //Removes room if empty
+    const playersInRoom = roomConnectedUsers[room.roomId].length;
+    if (playersInRoom === 0) {
+      //Removes room if empty
+      allRooms.splice(
+        allRooms.findIndex((r) => r.roomId === room.roomId),
+        1
+      );
+    }
   });
 });
 

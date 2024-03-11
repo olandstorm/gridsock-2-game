@@ -6,6 +6,7 @@ import updatePlayers from './updatePlayers.js';
 import { socket } from '../main.js';
 import printStart from './displayStartPage.js';
 import createPopup from './lib/createPopup.mjs';
+import updateRoomList from './updateRoomList.js';
 
 export default function displayChatRoom(room) {
   document.body.innerHTML = '';
@@ -35,8 +36,9 @@ export default function displayChatRoom(room) {
       sessionStorage.getItem('color')
     );
     updatePlayers(room.roomId);
+    socket.removeAllListeners();
     displayMainPage();
-    socket.removeAllListeners('chat');
+    /*     socket.on('room list', updateRoomList); */
     sessionStorage.removeItem('color');
   });
 
@@ -65,19 +67,44 @@ export default function displayChatRoom(room) {
   document.body.append(stickyContainer);
   navBar.append(title, roomName);
 
+  const gameContainer = document.createElement('div');
+  gameContainer.classList.add('game_container');
+
   // create game grid container
   const gridContainer = document.createElement('div');
-  gridContainer.id = 'grid-container';
   gridContainer.classList.add('grid_container');
 
-  const startGameBtn = document.createElement('button');
-  startGameBtn.id = 'startGameBtn';
-  startGameBtn.innerText = 'Start Game';
+  const beforeGameContainer = document.createElement('div');
+  beforeGameContainer.classList.add('before_game_container');
 
-  startGameBtn.addEventListener('click', () => {
-    //start timer
-    socket.emit('startGame');
+  const waitingSpan = document.createElement('span');
+  waitingSpan.innerText = 'Waiting for 4 players to connect...';
+  waitingSpan.classList.add('waiting_span');
+
+  beforeGameContainer.appendChild(waitingSpan);
+
+  //Listen to if theres 4 players in room
+  socket.on('enable start', () => {
+    waitingSpan.remove();
+    const startGameBtn = document.createElement('button');
+    startGameBtn.id = 'startGameBtn';
+    startGameBtn.innerText = 'Start Game';
+
+    startGameBtn.addEventListener('click', () => {
+      socket.emit('startCountdown', room);
+    });
+    beforeGameContainer.append(startGameBtn);
   });
+
+  socket.on('countdown', (countdown) => {
+    beforeGameContainer.innerHTML = '';
+    const countdownText = document.createElement('span');
+    countdownText.classList.add('countdown_span');
+    beforeGameContainer.appendChild(countdownText);
+    countdownText.innerText = `Get ready, game starts in... ${countdown}`;
+  });
+
+  gameContainer.append(gridContainer, beforeGameContainer);
 
   // create container for messages
   const chatMainSection = document.createElement('div');
@@ -119,7 +146,7 @@ export default function displayChatRoom(room) {
 
   // add all elements to chatPage
   chatMainSection.append(sendMessageContainer, chatBox);
-  chatPage.append(navBar, startGameBtn, gridContainer, chatMainSection);
+  chatPage.append(navBar, gameContainer, chatMainSection);
 
   let gameTimer;
   let remainingTime;
@@ -137,7 +164,7 @@ export default function displayChatRoom(room) {
       if (remainingTime <= 0) {
         clearInterval(gameTimer);
         //Tell server time is up?
-        socket.emit('endGame');
+        socket.emit('endGame', room);
       }
     }, 1000);
   }
@@ -156,7 +183,7 @@ export default function displayChatRoom(room) {
   //Listen to when game starts from server
   socket.on('gameStart', () => {
     //display game grid
-    createGameGrid(gridContainer, room.roomId);
+    createGameGrid(gridContainer, room.roomId, beforeGameContainer);
   });
 
   document.body.appendChild(chatPage);
