@@ -1,3 +1,5 @@
+import { socket } from '../main.js';
+
 let gameTimer;
 let remainingTime;
 
@@ -6,7 +8,7 @@ startGameBtn.id = 'startGameBtn';
 startGameBtn.innerText = 'Start Game';
 
 startGameBtn.addEventListener('click', () => {
-    Socket.emit('startGame');    
+    socket.emit('startGame');    
 })
 
 //container.appendChild(startGameBtn);
