@@ -105,6 +105,10 @@ io.on('connection', (socket) => {
     io.emit('all players', roomConnectedUsers);
     console.log(roomConnectedUsers);
   });
+
+  socket.on('declare winner', (username) => {
+    io.emit('announce winner', username);
+  })
 });
 
 io.of('/').adapter.on('join-room', (room, id) => {
