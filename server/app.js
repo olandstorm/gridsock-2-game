@@ -38,6 +38,7 @@ io.on('connection', (socket) => {
     const roomId = randomUUID();
     allRooms.push({ name: room, roomId: roomId });
     socket.emit('room object', { name: room, roomId: roomId });
+    io.emit('room list', allRooms);
   });
 
   // Allow the client to join specific room
