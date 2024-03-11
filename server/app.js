@@ -89,6 +89,16 @@ io.on('connection', (socket) => {
     socket.broadcast
       .to(room.roomId)
       .emit('chat', generateMessage('Admin', `New user has joined`, room.name));
+
+    for (const roomId in roomConnectedUsers) {
+      if (roomConnectedUsers.hasOwnProperty(roomId)) {
+        const playersInRoom = io.sockets.adapter.rooms.get(roomId);
+        const numberOfPlayersInRoom = playersInRoom ? playersInRoom.size : 0;
+        console.log(
+          `In the room ${roomId}, its now ${numberOfPlayersInRoom} players.`
+        );
+      }
+    }
   });
 
   // Hantera när en spelare klickar på en cell
