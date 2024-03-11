@@ -1,5 +1,5 @@
 const gameRoom = {
-  handleConnection: (socket, io) => {
+  handleConnection: (socket, io, roomConnectedUsers) => {
     //connections to game room
 
     //Listen to countdown
@@ -12,47 +12,58 @@ const gameRoom = {
         } else {
           clearInterval(countdownToStart);
           /*  io.emit('startGame'); */
-          startGame();
+          startGame(room.roomId);
         }
       }, 1000);
     });
 
     //Listen to when a player click start button
-    function startGame() {
+    function startGame(roomId) {
       if (!gameStarted) {
-        startGameSession();
+        startGameSession(roomId);
         //Send timeinfo to client
-        io.emit('gameDuration', gameDuration);
+        io.to(roomId).emit('gameDuration', gameDuration);
       }
     }
 
     //Listen to when time is up.
-    socket.on('endGame', () => {
+    socket.on('endGame', (room) => {
       if (gameStarted) {
-        endGameSession();
+        endGameSession(room.roomId);
       }
     });
 
     //Listen to when a player disconnects and end game session if noone is left
     socket.on('disconnect', () => {
-      if (gameStarted && io.engine.clientsCount === 0) {
-        endGameSession();
-      }
+      Object.keys(roomConnectedUsers).forEach((roomId) => {
+        const usersInRoom = roomConnectedUsers[roomId];
+        const userIndex = usersInRoom.findIndex(
+          (user) => user.userId === socket.id
+        );
+        if (userIndex !== -1) {
+          const disconnectedRoomId = roomId;
+          console.log('Disconnected user was in room:', disconnectedRoomId);
+          if (gameStarted && io.engine.clientsCount === 0) {
+            endGameSession(disconnectedRoomId);
+          }
+        }
+      });
     });
 
     let gameStarted = false;
     let gameDuration = 1 * 20 * 1000;
 
-    function startGameSession() {
+    function startGameSession(roomId) {
       gameStarted = true;
-      io.emit('gameStart');
+      io.to(roomId).emit('gameStart');
     }
 
-    function endGameSession() {
+    function endGameSession(roomId) {
       gameStarted = false;
-      io.emit('gameEnd');
+      io.to(roomId).emit('gameEnd');
     }
   },
+
   //other functions and logic for game
 };
 

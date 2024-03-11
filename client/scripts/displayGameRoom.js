@@ -152,7 +152,7 @@ export default function displayChatRoom(room) {
       if (remainingTime <= 0) {
         clearInterval(gameTimer);
         //Tell server time is up?
-        socket.emit('endGame');
+        socket.emit('endGame', room);
       }
     }, 1000);
   }

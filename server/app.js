@@ -24,7 +24,7 @@ const allRooms = [];
 const roomConnectedUsers = {};
 
 io.on('connection', (socket) => {
-  gameRoom.handleConnection(socket, io);
+  gameRoom.handleConnection(socket, io, roomConnectedUsers);
 
   socket.on('chat', (arg) => {
     io.to(arg.room).emit(
@@ -55,8 +55,16 @@ io.on('connection', (socket) => {
     }
 
     // If the room does not include the username, push the username
-    if (!roomConnectedUsers[room.roomId].includes(username)) {
-      roomConnectedUsers[room.roomId].push(username);
+    if (
+      !roomConnectedUsers[room.roomId].includes({
+        name: username,
+        userId: socket.id,
+      })
+    ) {
+      roomConnectedUsers[room.roomId].push({
+        name: username,
+        userId: socket.id,
+      });
     }
 
     console.log(roomConnectedUsers);
@@ -98,7 +106,7 @@ io.on('connection', (socket) => {
     assignedColors[room.roomId].push(color);
 
     roomConnectedUsers[room.roomId] = roomConnectedUsers[room.roomId].filter(
-      (user) => user !== username
+      (user) => user.name !== username
     );
     socket.leave(room.roomId);
 
