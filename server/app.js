@@ -86,13 +86,8 @@ io.on('connection', (socket) => {
       color /* spelarens id eller färg */,
     });
   });
-  // handle when a user clicks on a cell
-  socket.on('cellClicked', ({ row, col }) => {
-    io.emit('updateCell', { row, col, color });
-  });
 
   socket.on('leave room', (room, username, color) => {
-
     // Push back the color in assignedColors so it can be available again
     assignedColors[room.roomId].push(color);
 
