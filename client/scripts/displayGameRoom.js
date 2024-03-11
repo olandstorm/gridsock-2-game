@@ -4,6 +4,7 @@ import sendChat from './sendChat.js';
 import createGameGrid from './displayGameGrid.js';
 import updatePlayers from './updatePlayers.js';
 import { socket } from '../main.js';
+import printStart from './displayStartPage.js';
 
 export default function displayChatRoom(room) {
   document.body.innerHTML = '';
@@ -29,7 +30,7 @@ export default function displayChatRoom(room) {
     socket.emit(
       'leave room',
       room,
-      sessionStorage.getItem('user'),
+      localStorage.getItem('user'),
       sessionStorage.getItem('color')
     );
     updatePlayers(room.roomId);
@@ -40,7 +41,7 @@ export default function displayChatRoom(room) {
 
   /*   // When a user leaves the page, emit event and update player list
   window.addEventListener('beforeunload', () => {
-    socket.emit('leave room', room, sessionStorage.getItem('user'), sessionStorage.getItem('color'));
+    socket.emit('leave room', room, localStorage.getItem('user'), sessionStorage.getItem('color'));
     updatePlayers(room);
   }); */
 
