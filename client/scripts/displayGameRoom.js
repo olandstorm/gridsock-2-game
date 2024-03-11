@@ -6,6 +6,7 @@ import updatePlayers from './updatePlayers.js';
 import { socket } from '../main.js';
 import printStart from './displayStartPage.js';
 import createPopup from './lib/createPopup.mjs';
+import updateRoomList from './updateRoomList.js';
 
 export default function displayChatRoom(room) {
   document.body.innerHTML = '';
@@ -35,8 +36,9 @@ export default function displayChatRoom(room) {
       sessionStorage.getItem('color')
     );
     updatePlayers(room.roomId);
+    socket.removeAllListeners();
     displayMainPage();
-    socket.removeAllListeners('chat');
+    /*     socket.on('room list', updateRoomList); */
     sessionStorage.removeItem('color');
   });
 

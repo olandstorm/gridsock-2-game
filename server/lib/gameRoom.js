@@ -11,7 +11,6 @@ const gameRoom = {
           countdown--;
         } else {
           clearInterval(countdownToStart);
-          /*  io.emit('startGame'); */
           startGame(room.roomId);
         }
       }, 1000);
