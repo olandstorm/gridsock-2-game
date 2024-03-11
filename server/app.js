@@ -5,6 +5,7 @@ const usersRouter = require('./routes/users');
 const { selectColor, assignedColors } = require('./lib/colorAssign.js');
 const { generateMessage } = require('./lib/message.js');
 const express = require('express');
+const gameRoom = require('./lib/gameRoom.js');
 
 app.use(express.json());
 app.use('/users', usersRouter);
@@ -16,11 +17,15 @@ const io = require('socket.io')(server, {
   },
 });
 
+
+
 // List of all rooms
 const allRooms = [];
 const roomConnectedUsers = {};
 
 io.on('connection', (socket) => {
+  gameRoom.handleConnection(socket, io);
+
   socket.on('chat', (arg) => {
     io.to(arg.room).emit(
       'chat',
