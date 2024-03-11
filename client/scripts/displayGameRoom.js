@@ -77,12 +77,23 @@ export default function displayChatRoom(room) {
   const beforeGameContainer = document.createElement('div');
   beforeGameContainer.classList.add('before_game_container');
 
-  const startGameBtn = document.createElement('button');
-  startGameBtn.id = 'startGameBtn';
-  startGameBtn.innerText = 'Start Game';
+  const waitingSpan = document.createElement('span');
+  waitingSpan.innerText = 'Waiting for 4 players to connect...';
+  waitingSpan.classList.add('waiting_span');
 
-  startGameBtn.addEventListener('click', () => {
-    socket.emit('startCountdown', room);
+  beforeGameContainer.appendChild(waitingSpan);
+
+  //Listen to if theres 4 players in room
+  socket.on('enable start', () => {
+    waitingSpan.remove();
+    const startGameBtn = document.createElement('button');
+    startGameBtn.id = 'startGameBtn';
+    startGameBtn.innerText = 'Start Game';
+
+    startGameBtn.addEventListener('click', () => {
+      socket.emit('startCountdown', room);
+    });
+    beforeGameContainer.append(startGameBtn);
   });
 
   socket.on('countdown', (countdown) => {
@@ -93,7 +104,6 @@ export default function displayChatRoom(room) {
     countdownText.innerText = `Get ready, game starts in... ${countdown}`;
   });
 
-  beforeGameContainer.append(startGameBtn);
   gameContainer.append(gridContainer, beforeGameContainer);
 
   // create container for messages
