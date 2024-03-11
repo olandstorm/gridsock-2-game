@@ -19,10 +19,10 @@ export default function printStart() {
   loginContainer.classList.add('login_container');
 
   const emailLabel = document.createElement('label');
-  emailLabel.classList.add('email_label');
+  emailLabel.classList.add('login_label');
 
   const emailSpan = document.createElement('span');
-  emailSpan.classList.add('email_span');
+  emailSpan.classList.add('login_label_span');
   emailSpan.innerText = 'Email:';
 
   const emailInput = document.createElement('input');
@@ -34,10 +34,10 @@ export default function printStart() {
   emailLabel.append(emailSpan, emailInput);
 
   const passwordLabel = document.createElement('label');
-  passwordLabel.classList.add('name_label');
+  passwordLabel.classList.add('login_label');
 
   const passwordSpan = document.createElement('span');
-  passwordSpan.classList.add('name_span');
+  passwordSpan.classList.add('login_label_span');
   passwordSpan.innerText = 'Password:';
 
   const passwordInput = document.createElement('input');

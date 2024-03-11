@@ -97,3 +97,14 @@ h2 {
   display: flex;
   flex-direction: column;
 }
+
+.login_label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  row-gap: 3px;
+}
+
+.login_label_span {
+  margin-left: 7px;
+}

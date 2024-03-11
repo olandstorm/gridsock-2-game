@@ -9,10 +9,10 @@ export default function displayNewUser(loginContainer) {
   newUserHeader.innerText = 'Create a new user';
 
   const nameLabel = document.createElement('label');
-  nameLabel.classList.add('name_label');
+  nameLabel.classList.add('login_label');
 
   const nameSpan = document.createElement('span');
-  nameSpan.classList.add('name_span');
+  nameSpan.classList.add('login_label_span');
   nameSpan.innerText = 'Name:';
 
   const nameInput = document.createElement('input');
@@ -24,10 +24,10 @@ export default function displayNewUser(loginContainer) {
   nameLabel.append(nameSpan, nameInput);
 
   const emailLabel = document.createElement('label');
-  emailLabel.classList.add('email_label');
+  emailLabel.classList.add('login_label');
 
   const emailSpan = document.createElement('span');
-  emailSpan.classList.add('email_span');
+  emailSpan.classList.add('login_label_span');
   emailSpan.innerText = 'Email:';
 
   const emailInput = document.createElement('input');
@@ -39,10 +39,10 @@ export default function displayNewUser(loginContainer) {
   emailLabel.append(emailSpan, emailInput);
 
   const passwordLabel = document.createElement('label');
-  passwordLabel.classList.add('name_label');
+  passwordLabel.classList.add('login_label');
 
   const passwordSpan = document.createElement('span');
-  passwordSpan.classList.add('name_span');
+  passwordSpan.classList.add('login_label_span');
   passwordSpan.innerText = 'Password:';
 
   const passwordInput = document.createElement('input');
@@ -55,7 +55,7 @@ export default function displayNewUser(loginContainer) {
 
   const saveNewUserBtn = document.createElement('button');
   saveNewUserBtn.innerText = 'Create user and login';
-  saveNewUserBtn.classList.add('enter_btn');
+  saveNewUserBtn.classList.add('create_enter_btn');
   saveNewUserBtn.id = 'saveUserBtn';
 
   saveNewUserBtn.addEventListener('click', () => {
