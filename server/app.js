@@ -2,6 +2,7 @@ const app = require('express')();
 const server = require('http').createServer(app);
 const { randomUUID } = require('crypto');
 const usersRouter = require('./routes/users');
+const resultsRouter = require('./routes/results.js');
 const { selectColor, assignedColors } = require('./lib/colorAssign.js');
 const { generateMessage } = require('./lib/message.js');
 const express = require('express');
@@ -11,6 +12,7 @@ const gameRoom = require('./lib/gameRoom.js');
 app.use(cors());
 app.use(express.json());
 app.use('/users', usersRouter);
+app.use('/results', resultsRouter);
 
 const io = require('socket.io')(server, {
   cors: {
@@ -83,7 +85,7 @@ io.on('connection', (socket) => {
       .emit('chat', generateMessage('Admin', `New user has joined`, room.name));
   });
 
-  // Hantera när en spelare klickar på en cell
+  // Handle when a player click on a cell
   socket.on('cellClicked', ({ row, col, color, roomId }) => {
     // Här kan du lägga till logik för att hantera vilken spelare som klickade och uppdatera alla andra klienter
     io.to(roomId).emit('updateCell', {
