@@ -6,6 +6,7 @@ import updatePlayers from './updatePlayers.js';
 import { socket } from '../main.js';
 import printStart from './displayStartPage.js';
 import createPopup from './lib/createPopup.mjs';
+import quitGame from './quitGame.js';
 
 export default function displayChatRoom(room) {
   document.body.innerHTML = '';
@@ -147,6 +148,7 @@ export default function displayChatRoom(room) {
     //Additional functions...score, save board etc
     clearInterval(gameTimer);
     createPopup('Times up!');
+    quitGame();
   });
 
   socket.on('chat', (arg) => {
