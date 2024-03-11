@@ -1,3 +1,5 @@
+import { socket } from '../main.js';
+
 export default function calculateGameResult() {
     const cellElements = document.querySelectorAll('.cell');
     const playerScores = {
@@ -19,6 +21,36 @@ export default function calculateGameResult() {
       }
     });
   
-    console.log('game result:', playerScores);
-  };
+  
+    let highestScore = 0;
+    let winningColor = '';
+  
+    // Iterate over each property (color) to find highestScore
+    for (const color in playerScores) {
+      if (playerScores[color] > highestScore) {
+        highestScore = playerScores[color];
+        winningColor = color;
+      }
+    }
+  
+    // Check sessionStorage for the winning color and emit "declare winner"
+    const sessionColor = sessionStorage.getItem('color');
+    if (sessionColor === winningColor) {
+      const winningUsername = localStorage.getItem('user');
+      socket.emit('declare winner', winningUsername);  
+    }
+    socket.on('announce winner', (winner) => {
+        const popUpContainer = document.querySelector('.popup_container');
+        const declareWinnerDiv = document.createElement('div');
+        declareWinnerDiv.classList.add('announce_winner');
+
+        const declareWinnerText = document.createElement('p');
+        declareWinnerText.innerText = `The winner is ${winner}, with ${highestScore} cells with the color ${winningColor}`;
+
+        declareWinnerDiv.appendChild(declareWinnerText);
+
+        popUpContainer.insertBefore(declareWinnerDiv, popUpContainer.firstChild);
+    })
+  
+};
   
