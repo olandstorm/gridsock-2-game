@@ -26,9 +26,15 @@ export default function displayChatRoom(room) {
   leaveRoomBtn.innerText = 'Leave Room';
   leaveRoomBtn.addEventListener('click', () => {
     console.log(room.roomId);
-    socket.emit('leave room', room, sessionStorage.getItem('user'), sessionStorage.getItem('color'));
+    socket.emit(
+      'leave room',
+      room,
+      sessionStorage.getItem('user'),
+      sessionStorage.getItem('color')
+    );
     updatePlayers(room.roomId);
     displayMainPage();
+    socket.removeAllListeners();
   });
 
   /*   // When a user leaves the page, emit event and update player list
