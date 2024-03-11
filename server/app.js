@@ -90,14 +90,10 @@ io.on('connection', (socket) => {
       .to(room.roomId)
       .emit('chat', generateMessage('Admin', `New user has joined`, room.name));
 
-    for (const roomId in roomConnectedUsers) {
-      if (roomConnectedUsers.hasOwnProperty(roomId)) {
-        const playersInRoom = io.sockets.adapter.rooms.get(roomId);
-        const numberOfPlayersInRoom = playersInRoom ? playersInRoom.size : 0;
-        console.log(
-          `In the room ${roomId}, its now ${numberOfPlayersInRoom} players.`
-        );
-      }
+    //Disable button if theres 4 players in room
+    const playersInRoom = roomConnectedUsers[room.roomId].length;
+    if (playersInRoom >= 4) {
+      socket.broadcast.emit('room full', room.roomId);
     }
   });
 
@@ -122,6 +118,16 @@ io.on('connection', (socket) => {
 
     io.emit('all players', roomConnectedUsers);
     console.log(roomConnectedUsers);
+
+    //Removes room if empty
+    const playersInRoom = roomConnectedUsers[room.roomId].length;
+    if (playersInRoom === 0) {
+      //Removes room if empty
+      allRooms.splice(
+        allRooms.findIndex((r) => r.roomId === room.roomId),
+        1
+      );
+    }
   });
 });
 
