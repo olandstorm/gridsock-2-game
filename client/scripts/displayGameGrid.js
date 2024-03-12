@@ -1,11 +1,14 @@
 import { socket } from '../main.js';
 
 export default function createGameGrid(
-  gridContainer,
+  gameContainer,
   roomId,
   beforeGameContainer
 ) {
   beforeGameContainer.remove();
+  // create game grid container
+  const gridContainer = document.createElement('div');
+  gridContainer.classList.add('grid_container');
 
   for (let x = 0; x < 25; x++) {
     for (let y = 0; y < 25; y++) {
@@ -40,4 +43,6 @@ export default function createGameGrid(
       cell.classList.add(`user_${color}`);
     }
   });
+
+  gameContainer.append(gridContainer);
 }
