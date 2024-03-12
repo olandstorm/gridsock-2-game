@@ -20,7 +20,7 @@ export default function updatePlayers(room) {
     roomConnectedUsers[room].forEach((user) => {
       const playerName = document.createElement('li');
       playerName.classList.add('player_name');
-      playerName.innerText = user;
+      playerName.innerText = user.name;
 
       playerList.appendChild(playerName);
     });

@@ -100,6 +100,14 @@ export default function displayMainPage() {
   // Request room list initially and update UI
   socket.emit('get rooms');
   socket.on('room list', updateRoomList);
+
+  socket.on('room full', (roomId) => {
+    const fullRoom = document.querySelector(`#room_btn_${roomId}`);
+    if (fullRoom) {
+      fullRoom.disabled = true;
+      fullRoom.innerText += ' (FULL)';
+    }
+  });
 }
 
 export { currentColor };

@@ -10,6 +10,7 @@ export default function updateRoomList(rooms) {
     rooms.forEach((room) => {
       const roomName = document.createElement('button');
       roomName.textContent = room.name;
+      roomName.id = 'room_btn_' + room.roomId;
       roomName.addEventListener('click', () => {
         socket.emit('join room', room, userName);
         displayChatRoom(room);
