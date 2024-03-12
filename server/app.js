@@ -24,6 +24,7 @@ const io = require('socket.io')(server, {
 // List of all rooms
 const allRooms = [];
 const roomConnectedUsers = {};
+
 const gameGrid = Array(25).fill().map(() => Array(25).fill(null));
 
 io.on('connection', (socket) => {
@@ -32,7 +33,8 @@ io.on('connection', (socket) => {
     io,
     roomConnectedUsers,
     allRooms,
-    assignedColors
+    assignedColors,
+    gameGrid //TODO: Kolla om den här blir samma för alla rum/game, annars måste vi skapa en ny varje gång ett rum skapas.
   );
 
   socket.on('chat', (arg) => {
@@ -41,6 +43,7 @@ io.on('connection', (socket) => {
       generateMessage(arg.user, arg.message, arg.room, arg.color)
     );
   });
+
 
   // Send list of all rooms to every client
   socket.on('get rooms', () => {
