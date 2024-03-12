@@ -1,4 +1,5 @@
-import calculateResult from "./calculateResult.js";
+const calculateResult = require('./calculateResult.js');
+const saveGameGridToDB = require('./saveGameGridToDB.js');
 
 const gameRoom = {
   handleConnection: (
@@ -36,19 +37,24 @@ const gameRoom = {
 		// Handle when a player click on a cell
 		socket.on('cellClicked', ({ row, col, color, roomId, player }) => {
 			//update gameGrid on server
-			gameGrid[row][col] = { color, player };
-			// Här kan du lägga till logik för att hantera vilken spelare som klickade och uppdatera alla andra klienter
-			io.to(roomId).emit('updateCell', {
-				row,
-				col,
-				color /* players color */,
-			});
+			if (gameGrid.length > row && gameGrid[row].length > col) {
+				gameGrid[row][col] = { color, player };
+
+				// Här kan du lägga till logik för att hantera vilken spelare som klickade och uppdatera alla andra klienter
+				io.to(roomId).emit('updateCell', {
+					row,
+					col,
+					color /* players color */,
+				});
+			} else {
+				console.error(`Invalid cell position: row ${row}, col ${col}`);
+			}
 		});
 
 		//Listen to when time is up.
-		socket.on('endGame', (room) => {
+		socket.on('endGame', async(room) => {
 			if (gameStarted) {
-				endGameSession(room.roomId);
+				await endGameSession(room.roomId);
 				
 			}
 		});
@@ -99,11 +105,14 @@ const gameRoom = {
 			io.to(roomId).emit('gameStart');
 		}
 
-		function endGameSession(roomId) {
+		async function endGameSession(roomId) {
 			gameStarted = false;
-			const score = calculateResult();
-			io.to(roomId).emit('gameEnd', score );
-			
+			const score = calculateResult(gameGrid);
+			console.log("Score", score);
+			const gameId = await saveGameGridToDB(gameGrid);
+			console.log("GameId", gameId);
+
+			io.to(roomId).emit('gameEnd', score, gameId);
 		}
   },
 
