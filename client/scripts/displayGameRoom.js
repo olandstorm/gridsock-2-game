@@ -85,7 +85,7 @@ export default function displayChatRoom(room) {
 
   //Listen to if theres 4 players in room
   socket.on('enable start', () => {
-    waitingSpan.remove();
+    beforeGameContainer.innerHTML = '';
     const startGameBtn = document.createElement('button');
     startGameBtn.id = 'startGameBtn';
     startGameBtn.innerText = 'Start Game';
