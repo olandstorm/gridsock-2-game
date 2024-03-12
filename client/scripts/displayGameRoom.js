@@ -7,7 +7,6 @@ import { socket } from '../main.js';
 import printStart from './displayStartPage.js';
 import createPopup from './lib/createPopup.mjs';
 import updateRoomList from './updateRoomList.js';
-import calculateGameResult from './calculateGameResult.js';
 
 export default function displayChatRoom(room) {
   document.body.innerHTML = '';
@@ -175,7 +174,7 @@ export default function displayChatRoom(room) {
     //Additional functions...score, save board etc
     clearInterval(gameTimer);
     createPopup('Times up!');
-    calculateGameResult();
+
   });
 
   socket.on('chat', (arg) => {
