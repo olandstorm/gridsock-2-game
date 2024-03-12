@@ -94,7 +94,6 @@ io.on('connection', (socket) => {
     const playersInRoom = roomConnectedUsers[room.roomId].length;
     if (playersInRoom >= 4) {
       socket.broadcast.emit('room full', room.roomId);
-    } else if (playersInRoom === 4) {
       io.emit('enable start');
     }
   });
