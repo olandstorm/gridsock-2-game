@@ -1,7 +1,13 @@
 import calculateResult from "./calculateResult.js";
 
 const gameRoom = {
-  handleConnection: (socket, io, roomConnectedUsers, gameGrid) => {
+  handleConnection: (
+    socket,
+    io,
+    roomConnectedUsers,
+    allRooms,
+    assignedColors
+  , gameGrid) => {
 		//connections to game room
 
 		//Listen to countdown
@@ -47,25 +53,43 @@ const gameRoom = {
 			}
 		});
 
-		//Listen to when a player disconnects and end game session if noone is left
-		socket.on('disconnect', () => {
-			Object.keys(roomConnectedUsers).forEach((roomId) => {
-				const usersInRoom = roomConnectedUsers[roomId];
-				const userIndex = usersInRoom.findIndex(
-					(user) => user.userId === socket.id
-				);
-				if (userIndex !== -1) {
-					const disconnectedRoomId = roomId;
-					console.log(
-						'Disconnected user was in room:',
-						disconnectedRoomId
-					);
-					if (gameStarted && io.engine.clientsCount === 0) {
-						endGameSession(disconnectedRoomId);
-					}
-				}
-			});
-		});
+    //Listen to when a player disconnects and end game session if noone is left
+    socket.on('disconnect', () => {
+      Object.keys(roomConnectedUsers).forEach((roomId) => {
+        const usersInRoom = roomConnectedUsers[roomId];
+        const disconnectedUser = usersInRoom.find(
+          (user) => user.userId === socket.id
+        );
+
+        if (disconnectedUser) {
+          const disconnectedRoomId = roomId;
+          console.log('Disconnected user was in room:', disconnectedRoomId);
+
+          //Remove user from room if disconnected
+          roomConnectedUsers[roomId] = roomConnectedUsers[roomId].filter(
+            (user) => user.userId !== socket.id
+          );
+
+          if (roomConnectedUsers[roomId].length === 0) {
+            const index = allRooms.findIndex((room) => room.roomId === roomId);
+            if (index !== -1) {
+              allRooms.splice(index, 1);
+            }
+          }
+
+          //Push back color
+          const disconnectedColor = disconnectedUser.color;
+          assignedColors[roomId].push(disconnectedColor);
+
+          io.emit('all players', roomConnectedUsers);
+
+          if (gameStarted && io.engine.clientsCount === 0) {
+            endGameSession(disconnectedRoomId);
+          }
+          io.emit('room list', allRooms);
+        }
+      });
+    });
 
 		let gameStarted = false;
 		let gameDuration = 1 * 20 * 1000;
