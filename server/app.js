@@ -24,9 +24,11 @@ const io = require('socket.io')(server, {
 // List of all rooms
 const allRooms = [];
 const roomConnectedUsers = {};
+const gameGrid = Array(25).fill().map(() => Array(25).fill(null));
 
 io.on('connection', (socket) => {
   gameRoom.handleConnection(socket, io, roomConnectedUsers);
+ 
 
   socket.on('chat', (arg) => {
     io.to(arg.room).emit(
@@ -99,16 +101,6 @@ io.on('connection', (socket) => {
     } else if (playersInRoom === 4) {
       io.emit('enable start');
     }
-  });
-
-  // Handle when a player click on a cell
-  socket.on('cellClicked', ({ row, col, color, roomId }) => {
-    // Här kan du lägga till logik för att hantera vilken spelare som klickade och uppdatera alla andra klienter
-    io.to(roomId).emit('updateCell', {
-      row,
-      col,
-      color /* spelarens id eller färg */,
-    });
   });
 
   socket.on('leave room', (room, username, color) => {
