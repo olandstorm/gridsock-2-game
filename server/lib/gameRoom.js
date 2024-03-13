@@ -100,10 +100,13 @@ const gameRoom = {
     async function endGameSession(roomId) {
       gameStarted = false;
       const gameGrid = gameGrids[roomId];
-      const score = calculateResult(gameGrid);
+      const score = calculateResult(gameGrid, roomConnectedUsers, roomId);
       console.log('Score', score);
       const gameId = await saveGameGridToDB(gameGrid);
       console.log('GameId', gameId);
+      gameGrids[roomId] = Array(25)
+        .fill()
+        .map(() => Array(25).fill(null));
 
       io.to(roomId).emit('gameEnd', { score, gameId });
     }
