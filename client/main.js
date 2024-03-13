@@ -3,7 +3,8 @@ import { io } from 'socket.io-client';
 import printStart from './scripts/displayStartPage.js';
 import displayMainPage from './scripts/displayMainPage';
 
-export const API_URL = '' || 'http://localhost:3000';
+export const API_URL =
+  'https://oyster-app-yeh24.ondigitalocean.app/' || 'http://localhost:3000';
 export const socket = io(API_URL);
 
 // User state check
