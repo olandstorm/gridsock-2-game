@@ -1,10 +1,6 @@
 import { socket } from '../main.js';
 
-export default function createGameGrid(
-  gridContainer,
-  roomId,
-  beforeGameContainer
-) {
+export default function createGameGrid(gridContainer, roomId, beforeGameContainer) {
   beforeGameContainer.remove();
 
   for (let x = 0; x < 25; x++) {
@@ -22,14 +18,14 @@ export default function createGameGrid(
     const row = clickedCell.dataset.row;
     const col = clickedCell.dataset.col;
     const color = sessionStorage.getItem('color');
+	const player = localStorage.getItem('userId');
 
-    socket.emit('cellClicked', { row, col, color, roomId });
+    socket.emit('cellClicked', { row, col, color, roomId, player });
   });
 
   socket.on('updateCell', ({ row, col, color }) => {
-    const cell = document.querySelector(
-      `.cell[data-row="${row}"][data-col="${col}"]`
-    );
+    const cell = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
+	
     if (cell) {
       cell.classList.forEach((className) => {
         if (className.startsWith('user_')) {
@@ -40,4 +36,5 @@ export default function createGameGrid(
       cell.classList.add(`user_${color}`);
     }
   });
-}
+};
+

@@ -2,6 +2,7 @@ const app = require('express')();
 const server = require('http').createServer(app);
 const { randomUUID } = require('crypto');
 const usersRouter = require('./routes/users');
+const resultsRouter = require('./routes/results.js');
 const { selectColor, assignedColors } = require('./lib/colorAssign.js');
 const { generateMessage } = require('./lib/message.js');
 const express = require('express');
@@ -11,6 +12,7 @@ const gameRoom = require('./lib/gameRoom.js');
 app.use(cors());
 app.use(express.json());
 app.use('/users', usersRouter);
+app.use('/results', resultsRouter);
 
 const io = require('socket.io')(server, {
   cors: {
@@ -22,6 +24,8 @@ const io = require('socket.io')(server, {
 // List of all rooms
 const allRooms = [];
 const roomConnectedUsers = {};
+const gameGrids = [];
+//const gameGrid = Array(25).fill().map(() => Array(25).fill(null));
 
 io.on('connection', (socket) => {
   gameRoom.handleConnection(
@@ -29,7 +33,8 @@ io.on('connection', (socket) => {
     io,
     roomConnectedUsers,
     allRooms,
-    assignedColors
+    assignedColors,
+    gameGrids //TODO: Kolla om den här blir samma för alla rum/game, annars måste vi skapa en ny varje gång ett rum skapas.
   );
 
   socket.on('chat', (arg) => {
@@ -38,6 +43,7 @@ io.on('connection', (socket) => {
       generateMessage(arg.user, arg.message, arg.room, arg.color)
     );
   });
+
 
   // Send list of all rooms to every client
   socket.on('get rooms', () => {
@@ -48,6 +54,10 @@ io.on('connection', (socket) => {
   socket.on('create room', (room) => {
     const roomId = randomUUID();
     allRooms.push({ name: room, roomId: roomId });
+      // Create gameGrid in specific room if it doesn´t exist.
+      if (!gameGrids[roomId]) {
+        gameGrids[roomId] = Array(25).fill().map(() => Array(25).fill(null));
+      }
     socket.emit('room object', { name: room, roomId: roomId });
     io.emit('room list', allRooms);
   });
@@ -98,20 +108,10 @@ io.on('connection', (socket) => {
 
     //Disable button if theres 4 players in room
     const playersInRoom = roomConnectedUsers[room.roomId].length;
-    if (playersInRoom >= 4) {
+    if (playersInRoom >= 2) {
       socket.broadcast.emit('room full', room.roomId);
       io.emit('enable start');
     }
-  });
-
-  // Hantera när en spelare klickar på en cell
-  socket.on('cellClicked', ({ row, col, color, roomId }) => {
-    // Här kan du lägga till logik för att hantera vilken spelare som klickade och uppdatera alla andra klienter
-    io.to(roomId).emit('updateCell', {
-      row,
-      col,
-      color /* spelarens id eller färg */,
-    });
   });
 
   socket.on('leave room', (room, username, color) => {

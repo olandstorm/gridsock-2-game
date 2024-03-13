@@ -174,6 +174,7 @@ export default function displayChatRoom(room) {
     //Additional functions...score, save board etc
     clearInterval(gameTimer);
     createPopup('Times up!');
+
   });
 
   socket.on('chat', (arg) => {
