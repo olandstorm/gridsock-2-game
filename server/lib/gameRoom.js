@@ -7,58 +7,54 @@ const gameRoom = {
     io,
     roomConnectedUsers,
     allRooms,
-    assignedColors
-  , gameGrids) => {
-		//connections to game room
+    assignedColors,
+    gameGrids
+  ) => {
+    //connections to game room
 
-		//Listen to countdown
-		socket.on('startCountdown', (room) => {
-			let countdown = 3;
-			const countdownToStart = setInterval(() => {
-				if (countdown >= 1) {
-					io.to(room.roomId).emit('countdown', countdown);
-					countdown--;
-				} else {
-					clearInterval(countdownToStart);
-					startGame(room.roomId);
-				}
-			}, 1000);
-		});
+    //Listen to countdown
+    socket.on('startCountdown', (room) => {
+      let countdown = 3;
+      const countdownToStart = setInterval(() => {
+        if (countdown >= 1) {
+          io.to(room.roomId).emit('countdown', countdown);
+          countdown--;
+        } else {
+          clearInterval(countdownToStart);
+          if (!gameStarted) {
+            gameStarted = true;
+            io.to(room.roomId).emit('gameStart');
+            //Send timeinfo to client
+            io.to(room.roomId).emit('gameDuration', gameDuration);
+          }
+        }
+      }, 1000);
+    });
 
-		//Listen to when a player click start button
-		function startGame(roomId) {
-			if (!gameStarted) {
-				startGameSession(roomId);
-				//Send timeinfo to client
-				io.to(roomId).emit('gameDuration', gameDuration);
-			}
-		}
-		
-		// Handle when a player click on a cell
-		socket.on('cellClicked', ({ row, col, color, roomId, player }) => {
-			//update gameGrid on server
-			let gameGrid = gameGrids[roomId];
-			if (gameGrid.length > row && gameGrid[row].length > col) {
-				gameGrid[row][col] = { color, player };
+    // Handle when a player click on a cell
+    socket.on('cellClicked', ({ row, col, color, roomId, player }) => {
+      //update gameGrid on server
+      let gameGrid = gameGrids[roomId];
+      if (gameGrid.length > row && gameGrid[row].length > col) {
+        gameGrid[row][col] = { color, player };
 
-				// Här kan du lägga till logik för att hantera vilken spelare som klickade och uppdatera alla andra klienter
-				io.to(roomId).emit('updateCell', {
-					row,
-					col,
-					color /* players color */,
-				});
-			} else {
-				console.error(`Invalid cell position: row ${row}, col ${col}`);
-			}
-		});
+        // Här kan du lägga till logik för att hantera vilken spelare som klickade och uppdatera alla andra klienter
+        io.to(roomId).emit('updateCell', {
+          row,
+          col,
+          color /* players color */,
+        });
+      } else {
+        console.error(`Invalid cell position: row ${row}, col ${col}`);
+      }
+    });
 
-		//Listen to when time is up.
-		socket.on('endGame', async(room) => {
-			if (gameStarted) {
-				await endGameSession(room.roomId);
-				
-			}
-		});
+    //Listen to when time is up.
+    socket.on('endGame', async (room) => {
+      if (gameStarted) {
+        await endGameSession(room.roomId);
+      }
+    });
 
     //Listen to when a player disconnects and end game session if noone is left
     socket.on('disconnect', () => {
@@ -98,24 +94,28 @@ const gameRoom = {
       });
     });
 
-		let gameStarted = false;
-		let gameDuration = 1 * 20 * 1000;
+    let gameStarted = false;
+    let gameDuration = 1 * 45 * 1000;
 
-		function startGameSession(roomId) {
-			gameStarted = true;
-			io.to(roomId).emit('gameStart');
-		}
+    async function endGameSession(roomId) {
+      gameStarted = false;
+      const gameGrid = gameGrids[roomId];
+      const score = calculateResult(gameGrid, roomConnectedUsers, roomId);
+      console.log('Score', score);
+      const gameId = await saveGameGridToDB(gameGrid);
+      console.log('GameId', gameId);
+      gameGrids[roomId] = Array(25)
+        .fill()
+        .map(() => Array(25).fill(null));
 
-		async function endGameSession(roomId) {
-			gameStarted = false;
-			const gameGrid = gameGrids[roomId];
-			const score = calculateResult(gameGrid);
-			console.log("Score", score);
-			const gameId = await saveGameGridToDB(gameGrid);
-			console.log("GameId", gameId);
-
-			io.to(roomId).emit('gameEnd', score, gameId);
-		}
+      io.to(roomId).emit('gameEnd', { score, gameId });
+      io.to(roomId).emit('chat', {
+        gameId: gameId,
+        user: 'Admin',
+        message: 'Coloratulations! Round ended, see results',
+        createdAt: new Date().toLocaleString(),
+      });
+    }
   },
 
   //other functions and logic for game
