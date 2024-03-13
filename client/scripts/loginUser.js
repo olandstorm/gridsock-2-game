@@ -3,7 +3,7 @@ import displayMainPage from './displayMainPage.js';
 import createPopup from './lib/createPopup.mjs';
 
 export default function loginUser(email, password) {
-  fetch(API_URL + '/users/login', {
+  fetch(API_URL + 'users/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

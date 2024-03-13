@@ -10,7 +10,7 @@ export default function saveNewUser(name, email, password) {
   };
   console.log(sendUser);
 
-  fetch(API_URL + '/users/add', {
+  fetch(API_URL + 'users/add', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
