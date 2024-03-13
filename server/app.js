@@ -44,7 +44,6 @@ io.on('connection', (socket) => {
     );
   });
 
-
   // Send list of all rooms to every client
   socket.on('get rooms', () => {
     io.emit('room list', allRooms);
@@ -54,10 +53,12 @@ io.on('connection', (socket) => {
   socket.on('create room', (room) => {
     const roomId = randomUUID();
     allRooms.push({ name: room, roomId: roomId });
-      // Create gameGrid in specific room if it doesn´t exist.
-      if (!gameGrids[roomId]) {
-        gameGrids[roomId] = Array(25).fill().map(() => Array(25).fill(null));
-      }
+    // Create gameGrid in specific room if it doesn´t exist.
+    if (!gameGrids[roomId]) {
+      gameGrids[roomId] = Array(25)
+        .fill()
+        .map(() => Array(25).fill(null));
+    }
     socket.emit('room object', { name: room, roomId: roomId });
     io.emit('room list', allRooms);
   });
@@ -149,4 +150,6 @@ io.of('/').adapter.on('leave-room', (room, id) => {
   console.log(`socket ${id} has left room ${room}`);
 });
 
-server.listen(3000);
+const PORT = process.env.PORT || 3000;
+
+server.listen(PORT);
