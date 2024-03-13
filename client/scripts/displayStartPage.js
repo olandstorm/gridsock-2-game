@@ -11,7 +11,7 @@ export default function printStart() {
   mainContainer.classList.add('main_container');
 
   const logoBigImg = document.createElement('img');
-  logoBigImg.src = 'assets/img/colorchaos_logo.webp';
+  logoBigImg.src = '/img/colorchaos_logo.webp';
   logoBigImg.alt = 'Logotype for Color Chaos';
   logoBigImg.classList.add('logo_img_big');
 

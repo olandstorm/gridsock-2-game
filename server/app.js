@@ -161,4 +161,6 @@ io.of('/').adapter.on('leave-room', (room, id) => {
   console.log(`socket ${id} has left room ${room}`);
 });
 
-server.listen(3000);
+const PORT = process.env.PORT || 3000;
+
+server.listen(PORT);
