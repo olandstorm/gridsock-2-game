@@ -1,4 +1,4 @@
-export default function updateChat(chat) {
+export default function updateChat(chat, chatBox) {
   console.log(chat);
   const chatList = document.querySelector('#chatList');
   const li = document.createElement('li');
@@ -15,6 +15,19 @@ export default function updateChat(chat) {
     li.classList.add('msg_from_other');
   }
 
-  li.innerText = user + ' said: ' + chat.message + chat.createdAt;
+  const msgSender = document.createElement('span');
+  msgSender.classList.add('msg_sender');
+  msgSender.innerText = user + ' said:';
+
+  const msg = document.createElement('span');
+  msg.classList.add('msg_span');
+  msg.innerText = chat.message;
+
+  const msgTime = document.createElement('span');
+  msgTime.classList.add('msg_time');
+  msgTime.innerText = chat.createdAt;
+
+  li.append(msgSender, msg, msgTime);
   chatList.append(li);
+  chatBox.scrollTop = chatBox.scrollHeight;
 }

@@ -3,7 +3,8 @@ import { socket } from '../main.js';
 export default function createGameGrid(
   gameContainer,
   roomId,
-  beforeGameContainer
+  beforeGameContainer,
+  timerContainer
 ) {
   beforeGameContainer.remove();
   // create game grid container
@@ -44,5 +45,5 @@ export default function createGameGrid(
     }
   });
 
-  gameContainer.append(gridContainer);
+  gameContainer.append(timerContainer, gridContainer);
 }

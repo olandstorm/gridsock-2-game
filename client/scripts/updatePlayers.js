@@ -19,11 +19,15 @@ export default function updatePlayers(room) {
     }
     roomConnectedUsers[room].forEach((user) => {
       console.log('user when entering:', user);
+      const colorCell = document.createElement('div');
+      colorCell.classList.add('player_cell_' + user.color);
+      colorCell.classList.add('player_cell');
       const playerName = document.createElement('li');
       playerName.classList.add('player_name');
       playerName.innerText = user.name;
 
-      playerList.appendChild(playerName);
+      playerName.prepend(colorCell);
+      playerList.append(playerName);
     });
 
     playersDiv.appendChild(playerList);
