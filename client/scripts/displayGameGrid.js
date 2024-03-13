@@ -26,14 +26,16 @@ export default function createGameGrid(
     const row = clickedCell.dataset.row;
     const col = clickedCell.dataset.col;
     const color = sessionStorage.getItem('color');
+    const player = localStorage.getItem('userId');
 
-    socket.emit('cellClicked', { row, col, color, roomId });
+    socket.emit('cellClicked', { row, col, color, roomId, player });
   });
 
   socket.on('updateCell', ({ row, col, color }) => {
     const cell = document.querySelector(
       `.cell[data-row="${row}"][data-col="${col}"]`
     );
+
     if (cell) {
       cell.classList.forEach((className) => {
         if (className.startsWith('user_')) {

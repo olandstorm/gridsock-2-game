@@ -230,6 +230,7 @@ export default function displayChatRoom(room) {
     //Additional functions...score, save board etc
     stopTimer(gameTimer);
     createPopup('Times up!');
+
   });
 
   function stopTimer(timer) {

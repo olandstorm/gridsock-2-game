@@ -11,9 +11,6 @@ router.post('/add', (req, res) => {
     const UUID = randomUUID();
     const encryptedPassword = CryptoJS.AES.encrypt(password, process.env.SALT_KEY).toString();
 
-    console.log('passwordet', encryptedPassword);
-    console.log('gamla passwordet', password);
-
     if (!name || !email || !password) {
         res.status(400).json({message: 'Missing required fields'});
         return;
