@@ -3,6 +3,7 @@ import updateRoomList from './updateRoomList';
 import displayChatRoom from './displayGameRoom.js';
 import createPopup from './lib/createPopup.mjs';
 import printStart from './displayStartPage.js';
+import updateColor from './lib/updateColorInfo.js';
 
 let currentColor = null;
 
@@ -83,6 +84,7 @@ export default function displayMainPage() {
   socket.on('room joined', (data) => {
     currentColor = data.color;
     sessionStorage.setItem('color', data.color);
+    updateColor(currentColor);
   });
 
   // add all element to mainContainer

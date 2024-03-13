@@ -116,24 +116,27 @@ io.on('connection', (socket) => {
 
   socket.on('leave room', (room, username, color) => {
     // Push back the color in assignedColors so it can be available again
-    assignedColors[room.roomId].push(color);
+    if (assignedColors[room.roomId] !== undefined) {
+      assignedColors[room.roomId].push(color);
 
-    roomConnectedUsers[room.roomId] = roomConnectedUsers[room.roomId].filter(
-      (user) => user.name !== username
-    );
-    socket.leave(room.roomId);
-
-    io.emit('all players', roomConnectedUsers);
-    console.log('room coonected users', roomConnectedUsers);
-
-    //Removes room if empty
-    const playersInRoom = roomConnectedUsers[room.roomId].length;
-    if (playersInRoom === 0) {
-      //Removes room if empty
-      allRooms.splice(
-        allRooms.findIndex((r) => r.roomId === room.roomId),
-        1
+      roomConnectedUsers[room.roomId] = roomConnectedUsers[room.roomId].filter(
+        (user) => user.name !== username
       );
+
+      socket.leave(room.roomId);
+
+      io.emit('all players', roomConnectedUsers);
+      console.log('room coonected users', roomConnectedUsers);
+
+      //Removes room if empty
+      const playersInRoom = roomConnectedUsers[room.roomId].length;
+      if (playersInRoom === 0) {
+        //Removes room if empty
+        allRooms.splice(
+          allRooms.findIndex((r) => r.roomId === room.roomId),
+          1
+        );
+      }
     }
   });
 });
