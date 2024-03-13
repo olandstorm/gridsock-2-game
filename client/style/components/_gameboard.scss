@@ -1,11 +1,13 @@
-.grid_container {
+.grid_container,
+.popup_result {
   display: grid;
   grid-template-columns: repeat(25, 1fr);
   grid-template-rows: repeat(25, 1fr);
   gap: 7px;
 }
 
-.cell {
+.cell,
+.result_cell {
   width: 18px;
   height: 18px;
   border: none;

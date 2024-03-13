@@ -1,5 +1,5 @@
 import { API_URL } from '../main.js';
-import calculateOldResult from './lib/calculateOldResult.js';
+import displayOldResult from './displayOldResult.js';
 
 export default function updateChat(chat, chatBox) {
   console.log(chat);
@@ -41,12 +41,7 @@ export default function updateChat(chat, chatBox) {
       const gameResult = await fetch(API_URL + 'results/' + gameId).then(
         (res) => res.json()
       );
-      console.log('game ruslts:', gameResult);
-      const gameScore = calculateOldResult(gameResult);
-      console.log('game score: ', gameScore);
-
-      // RENDER OLD GAMEGRID
-      //CREATE POPUP
+      displayOldResult(gameResult);
     });
 
     msg.append(oldGameBtn);
