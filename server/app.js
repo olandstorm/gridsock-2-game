@@ -150,4 +150,4 @@ io.of('/').adapter.on('leave-room', (room, id) => {
   console.log(`socket ${id} has left room ${room}`);
 });
 
-server.listen(process.env.API_URL || 3000);
+server.listen(process.env.PORT || 3000);
