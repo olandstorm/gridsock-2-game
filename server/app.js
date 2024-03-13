@@ -24,8 +24,8 @@ const io = require('socket.io')(server, {
 // List of all rooms
 const allRooms = [];
 const roomConnectedUsers = {};
-
-const gameGrid = Array(25).fill().map(() => Array(25).fill(null));
+const gameGrids = [];
+//const gameGrid = Array(25).fill().map(() => Array(25).fill(null));
 
 io.on('connection', (socket) => {
   gameRoom.handleConnection(
@@ -34,7 +34,7 @@ io.on('connection', (socket) => {
     roomConnectedUsers,
     allRooms,
     assignedColors,
-    gameGrid //TODO: Kolla om den här blir samma för alla rum/game, annars måste vi skapa en ny varje gång ett rum skapas.
+    gameGrids //TODO: Kolla om den här blir samma för alla rum/game, annars måste vi skapa en ny varje gång ett rum skapas.
   );
 
   socket.on('chat', (arg) => {
@@ -54,6 +54,10 @@ io.on('connection', (socket) => {
   socket.on('create room', (room) => {
     const roomId = randomUUID();
     allRooms.push({ name: room, roomId: roomId });
+      // Create gameGrid in specific room if it doesn´t exist.
+      if (!gameGrids[roomId]) {
+        gameGrids[roomId] = Array(25).fill().map(() => Array(25).fill(null));
+      }
     socket.emit('room object', { name: room, roomId: roomId });
     io.emit('room list', allRooms);
   });
@@ -104,7 +108,7 @@ io.on('connection', (socket) => {
 
     //Disable button if theres 4 players in room
     const playersInRoom = roomConnectedUsers[room.roomId].length;
-    if (playersInRoom >= 4) {
+    if (playersInRoom >= 2) {
       socket.broadcast.emit('room full', room.roomId);
       io.emit('enable start');
     }

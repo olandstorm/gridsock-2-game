@@ -8,7 +8,7 @@ const gameRoom = {
     roomConnectedUsers,
     allRooms,
     assignedColors
-  , gameGrid) => {
+  , gameGrids) => {
 		//connections to game room
 
 		//Listen to countdown
@@ -37,6 +37,7 @@ const gameRoom = {
 		// Handle when a player click on a cell
 		socket.on('cellClicked', ({ row, col, color, roomId, player }) => {
 			//update gameGrid on server
+			let gameGrid = gameGrids[roomId];
 			if (gameGrid.length > row && gameGrid[row].length > col) {
 				gameGrid[row][col] = { color, player };
 
@@ -107,6 +108,7 @@ const gameRoom = {
 
 		async function endGameSession(roomId) {
 			gameStarted = false;
+			const gameGrid = gameGrids[roomId];
 			const score = calculateResult(gameGrid);
 			console.log("Score", score);
 			const gameId = await saveGameGridToDB(gameGrid);
