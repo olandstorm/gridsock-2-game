@@ -110,7 +110,7 @@ io.on('connection', (socket) => {
 
     //Disable button if theres 4 players in room
     const playersInRoom = roomConnectedUsers[room.roomId].length;
-    if (playersInRoom >= 2) {
+    if (playersInRoom >= 3) {
       socket.broadcast.emit('room full', room.roomId);
       io.to(room.roomId).emit('enable start');
       io.to(room.roomId).emit('start over');
@@ -120,7 +120,7 @@ io.on('connection', (socket) => {
   socket.on('start over', (room) => {
     const playersInRoom = roomConnectedUsers[room.roomId].length;
 
-    if (playersInRoom >= 2) {
+    if (playersInRoom >= 3) {
       io.to(room.roomId).emit('start over');
     }
   });

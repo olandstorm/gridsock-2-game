@@ -95,7 +95,7 @@ const gameRoom = {
     });
 
     let gameStarted = false;
-    let gameDuration = 1 * 5 * 1000;
+    let gameDuration = 1 * 45 * 1000;
 
     async function endGameSession(roomId) {
       gameStarted = false;
