@@ -6,12 +6,32 @@ const connection = require('../lib/conn');
 
 
 
-//get all results
-
-
 //get specific result
-router.get('/', (req, res) => {
+router.get('/:gameId', (req, res) => {
+	const gameId = req.params.gameId;
 
+	const query = 'SELECT * FROM results WHERE gameId = ?';
+	connection.query(query, [gameId], (err, results) => {
+		if (err) {
+			console.log('Error with query', err);
+			res.status(500).json({ error: 'Internal server error' });
+			return;
+		}
+		const gameGridData = results.map(row => ({
+			row: row.row,
+			col: row.col,
+			color: row.color,
+			player: row.player
+		}));
+
+		const gameGrid = Array(25).fill().map(() => Array(25).fill(null));
+		gameGridData.forEach(cell => {
+			gameGrid[cell.row][cell.col] = { color: cell.color, player: cell.player };
+			
+		});
+		res.status(200).json({ gameGrid: gameGrid });
+		//console.log('gameGrid', gameGrid);
+	})
 })
 
 
