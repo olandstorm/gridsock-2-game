@@ -18,7 +18,7 @@ export default function displayChatRoom(room) {
   navBar.classList.add('nav_bar');
 
   const logoSmallImg = document.createElement('img');
-  logoSmallImg.src = 'assets/img/colorchaos_logo_small.webp';
+  logoSmallImg.src = '/img/colorchaos_logo_small.webp';
   logoSmallImg.alt = 'Logotype for Color Chaos';
   logoSmallImg.classList.add('logo_img_small');
 
@@ -230,7 +230,6 @@ export default function displayChatRoom(room) {
     //Additional functions...score, save board etc
     stopTimer(gameTimer);
     createPopup('Times up!');
-
   });
 
   function stopTimer(timer) {
