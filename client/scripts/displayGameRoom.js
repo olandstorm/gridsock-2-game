@@ -126,9 +126,7 @@ export default function displayChatRoom(room) {
   });
 
   socket.on('countdown', (countdown) => {
-    console.log('Before updating container', beforeGameContainer);
     beforeGameContainer.innerHTML = '';
-    console.log('After updating container', beforeGameContainer);
     const countdownText = document.createElement('span');
     countdownText.classList.add('countdown_span');
     beforeGameContainer.appendChild(countdownText);

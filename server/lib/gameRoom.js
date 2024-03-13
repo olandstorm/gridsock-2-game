@@ -109,6 +109,12 @@ const gameRoom = {
         .map(() => Array(25).fill(null));
 
       io.to(roomId).emit('gameEnd', { score, gameId });
+      io.to(roomId).emit('chat', {
+        gameId: gameId,
+        user: 'Admin',
+        message: 'Coloratulations! Round ended, see results',
+        createdAt: new Date().toLocaleString(),
+      });
     }
   },
 
