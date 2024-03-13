@@ -1,8 +1,9 @@
+import { API_URL } from '../main.js';
 import displayMainPage from './displayMainPage.js';
 import createPopup from './lib/createPopup.mjs';
 
 export default function loginUser(email, password) {
-  fetch('http://localhost:3000/users/login', {
+  fetch(API_URL + '/users/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

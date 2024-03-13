@@ -1,5 +1,6 @@
 import createPopup from './lib/createPopup.mjs';
 import displayMainPage from './displayMainPage.js';
+import { API_URL } from '../main.js';
 
 export default function saveNewUser(name, email, password) {
   const sendUser = {
@@ -9,7 +10,7 @@ export default function saveNewUser(name, email, password) {
   };
   console.log(sendUser);
 
-  fetch('http://localhost:3000/users/add', {
+  fetch(API_URL + '/users/add', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
