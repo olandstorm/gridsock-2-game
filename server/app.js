@@ -44,7 +44,6 @@ io.on('connection', (socket) => {
     );
   });
 
-
   // Send list of all rooms to every client
   socket.on('get rooms', () => {
     io.emit('room list', allRooms);
@@ -54,10 +53,12 @@ io.on('connection', (socket) => {
   socket.on('create room', (room) => {
     const roomId = randomUUID();
     allRooms.push({ name: room, roomId: roomId });
-      // Create gameGrid in specific room if it doesn´t exist.
-      if (!gameGrids[roomId]) {
-        gameGrids[roomId] = Array(25).fill().map(() => Array(25).fill(null));
-      }
+    // Create gameGrid in specific room if it doesn´t exist.
+    if (!gameGrids[roomId]) {
+      gameGrids[roomId] = Array(25)
+        .fill()
+        .map(() => Array(25).fill(null));
+    }
     socket.emit('room object', { name: room, roomId: roomId });
     io.emit('room list', allRooms);
   });
@@ -110,11 +111,21 @@ io.on('connection', (socket) => {
     const playersInRoom = roomConnectedUsers[room.roomId].length;
     if (playersInRoom >= 2) {
       socket.broadcast.emit('room full', room.roomId);
-      io.emit('enable start');
+      io.to(room.roomId).emit('enable start');
+      io.to(room.roomId).emit('start over');
+    }
+  });
+
+  socket.on('start over', (room) => {
+    const playersInRoom = roomConnectedUsers[room.roomId].length;
+
+    if (playersInRoom >= 2) {
+      io.to(room.roomId).emit('start over');
     }
   });
 
   socket.on('leave room', (room, username, color) => {
+    io.to(room.roomId).emit('player left', room);
     // Push back the color in assignedColors so it can be available again
     if (assignedColors[room.roomId] !== undefined) {
       assignedColors[room.roomId].push(color);
