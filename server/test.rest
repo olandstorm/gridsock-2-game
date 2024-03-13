@@ -22,3 +22,7 @@ Content-Type: application/json
 }
 
 ###
+
+GET http://localhost:3000/results/c2d871dc-9b1c-451d-8176-67adb83b9d7f
+
+###
