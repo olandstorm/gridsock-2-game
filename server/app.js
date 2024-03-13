@@ -64,7 +64,7 @@ io.on('connection', (socket) => {
   });
 
   // Allow the client to join specific room
-  socket.on('join room', (room, username) => {
+  socket.on('join room', (room, username, uuid) => {
     const color = selectColor(room.roomId);
 
     if (!roomConnectedUsers[room.roomId]) {
@@ -79,6 +79,7 @@ io.on('connection', (socket) => {
     if (!existingUser) {
       roomConnectedUsers[room.roomId].push({
         name: username,
+        uuid: uuid,
         userId: socket.id,
         color: color,
       });

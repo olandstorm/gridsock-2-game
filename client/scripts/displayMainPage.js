@@ -75,7 +75,8 @@ export default function displayMainPage() {
       socket.emit('create room', roomName);
       socket.once('room object', (room) => {
         const userName = localStorage.getItem('user');
-        socket.emit('join room', room, userName);
+        const uuid = localStorage.getItem('userId');
+        socket.emit('join room', room, userName, uuid);
         displayChatRoom(room);
       });
     }

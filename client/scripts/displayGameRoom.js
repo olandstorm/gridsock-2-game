@@ -240,11 +240,16 @@ export default function displayChatRoom(room) {
   }
 
   //Listen to when game ends from server
-  socket.on('gameEnd', (arg) => {
-    console.log('arg', arg);
-    console.log('gameId', arg.gameId);
+  socket.on('gameEnd', (gameIdScore) => {
     stopTimer(gameTimer);
-    endGame(socket, room, gameContainer, timerContainer, beforeGameContainer);
+    endGame(
+      socket,
+      room,
+      gameIdScore,
+      gameContainer,
+      timerContainer,
+      beforeGameContainer
+    );
   });
 
   function stopTimer(timer) {
