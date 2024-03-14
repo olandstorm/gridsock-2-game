@@ -23,6 +23,7 @@ const gameRoom = {
           clearInterval(countdownToStart);
           if (!gameStarted) {
             gameStarted = true;
+            io.emit('game on', room.roomId);
             io.to(room.roomId).emit('gameStart');
             //Send timeinfo to client
             io.to(room.roomId).emit('gameDuration', gameDuration);
@@ -48,10 +49,28 @@ const gameRoom = {
       }
     });
 
+    function calculateNull(gameGrid) {
+      const allCellsNull = gameGrid.every((row) =>
+        row.every((cell) => cell === null)
+      );
+
+      if (allCellsNull) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
     //Listen to when time is up.
     socket.on('endGame', async (room) => {
-      if (gameStarted) {
-        await endGameSession(room.roomId);
+      if (calculateNull(gameGrids[room.roomId])) {
+        console.log('NO CELL CLICKED!');
+        gameStarted = false;
+        io.to(room.roomId).emit('game without click');
+      } else {
+        if (gameStarted) {
+          await endGameSession(room.roomId);
+        }
       }
     });
 
@@ -94,10 +113,11 @@ const gameRoom = {
     });
 
     let gameStarted = false;
-    let gameDuration = 1 * 45 * 1000;
+    let gameDuration = 1 * 5 * 1000;
 
     async function endGameSession(roomId) {
       gameStarted = false;
+      io.emit('game off', roomId);
       const gameGrid = gameGrids[roomId];
       const score = calculateResult(gameGrid, roomConnectedUsers, roomId);
 
