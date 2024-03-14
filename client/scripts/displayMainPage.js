@@ -38,6 +38,21 @@ export default function displayMainPage() {
   const inputRoomName = document.createElement('input');
   inputRoomName.type = 'text';
   inputRoomName.classList.add('input_room_name');
+  inputRoomName.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      const roomName = inputRoomName.value;
+      if (roomName) {
+        socket.emit('create room', roomName);
+        socket.once('room object', (room) => {
+          const userName = localStorage.getItem('user');
+          const uuid = localStorage.getItem('userId');
+          socket.emit('join room', room, userName, uuid);
+          displayChatRoom(room);
+        });
+      }
+      inputRoomName.value = '';
+    }
+  })
 
   const instructionBtn = document.createElement('button');
   instructionBtn.innerText = 'How to play';
