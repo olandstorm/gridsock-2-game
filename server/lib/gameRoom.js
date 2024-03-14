@@ -38,11 +38,10 @@ const gameRoom = {
       if (gameGrid.length > row && gameGrid[row].length > col) {
         gameGrid[row][col] = { color, player };
 
-        // Här kan du lägga till logik för att hantera vilken spelare som klickade och uppdatera alla andra klienter
         io.to(roomId).emit('updateCell', {
           row,
           col,
-          color /* players color */,
+          color,
         });
       } else {
         console.error(`Invalid cell position: row ${row}, col ${col}`);
@@ -66,7 +65,7 @@ const gameRoom = {
 
         if (disconnectedUser) {
           const disconnectedRoomId = roomId;
-          console.log('Disconnected user was in room:', disconnectedRoomId);
+          //console.log('Disconnected user was in room:', disconnectedRoomId);
 
           //Remove user from room if disconnected
           roomConnectedUsers[roomId] = roomConnectedUsers[roomId].filter(
@@ -101,9 +100,9 @@ const gameRoom = {
       gameStarted = false;
       const gameGrid = gameGrids[roomId];
       const score = calculateResult(gameGrid, roomConnectedUsers, roomId);
-      console.log('Score', score);
+
       const gameId = await saveGameGridToDB(gameGrid);
-      console.log('GameId', gameId);
+
       gameGrids[roomId] = Array(25)
         .fill()
         .map(() => Array(25).fill(null));
