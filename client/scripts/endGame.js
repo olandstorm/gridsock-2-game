@@ -67,7 +67,7 @@ export default function endGame(
   timerContainer.remove();
 
   const waitingSpan = document.createElement('span');
-  waitingSpan.innerText = 'Waiting for 4 players to connect...';
+  waitingSpan.innerText = 'Waiting for 2-4 players to connect...';
   waitingSpan.classList.add('waiting_span');
 
   beforeGameContainer.appendChild(waitingSpan);
@@ -88,7 +88,7 @@ export default function endGame(
     socket.on('player left', () => {
       beforeGameContainer.innerHTML = '';
       const waitingSpan = document.createElement('span');
-      waitingSpan.innerText = 'Waiting for 4 players to connect...';
+      waitingSpan.innerText = 'Waiting for 2-4 players to connect...';
       waitingSpan.classList.add('waiting_span');
 
       beforeGameContainer.appendChild(waitingSpan);
