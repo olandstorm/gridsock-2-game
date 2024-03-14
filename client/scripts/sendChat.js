@@ -1,10 +1,10 @@
 import { socket } from '../main.js';
 import { currentColor } from './displayMainPage.js';
 
-export default function sendChat(inputMessage, room) {
+export default function sendChat(writtenMessage, room) {
   const user = localStorage.getItem('user');
   socket.emit('chat', {
-    message: inputMessage.value,
+    message: writtenMessage,
     user: user,
     color: currentColor,
     room: room.roomId,
