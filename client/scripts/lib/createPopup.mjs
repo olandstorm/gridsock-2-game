@@ -33,6 +33,7 @@ export default function createPopup(text, popupClass, btn, btnClass, btnClick) {
   popup.appendChild(closePopupBtn);
   popupBackground.appendChild(popup);
   document.body.appendChild(popupBackground);
+  closePopupBtn.focus();
 
   return popupBackground;
 }
