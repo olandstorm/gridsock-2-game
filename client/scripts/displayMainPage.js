@@ -2,7 +2,6 @@ import { socket } from '../main.js';
 import updateRoomList from './updateRoomList';
 import displayChatRoom from './displayGameRoom.js';
 import closePopup from './lib/closePopup.mjs';
-import createPopup from './lib/createPopup.mjs';
 import printStart from './displayStartPage.js';
 import updateColor from './lib/updateColorInfo.js';
 
