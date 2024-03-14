@@ -1,6 +1,6 @@
 import closePopup from './closePopup.mjs';
 
-export default function createPopup(text, popupClass, btn, btnClass, btnClick) {
+export default function createPopup(text, popupClass,) {
   const popupBackground = document.createElement('div');
   popupBackground.classList.add('popup_background');
   const popup = document.createElement('div');
@@ -11,17 +11,6 @@ export default function createPopup(text, popupClass, btn, btnClass, btnClick) {
   popupText.innerText = text;
 
   popup.appendChild(popupText);
-
-  if (btn && btnClass && btnClick) {
-    const popupBtn = document.createElement('button');
-    popupBtn.innerText = btn;
-    popupBtn.classList.add(btnClass);
-    popupBtn.addEventListener('click', () => {
-      btnClick();
-      closePopup(popupBackground);
-    });
-    popup.appendChild(popupBtn);
-  }
 
   const closePopupBtn = document.createElement('button');
   closePopupBtn.innerText = 'Close';
