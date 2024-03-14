@@ -101,7 +101,7 @@ export default function displayChatRoom(room) {
 
   subTextContainer.append(subTextSpan, shortInstruction);
 
-  //Listen to if theres 4 players in room
+  //Listen to if theres 2-4 players in room
   socket.on('enable start', () => {
     beforeGameContainer.innerHTML = '';
     const startGameBtn = document.createElement('button');

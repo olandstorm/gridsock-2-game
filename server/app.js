@@ -110,23 +110,25 @@ io.on('connection', (socket) => {
 
     //Disable button if theres 4 players in room
     const playersInRoom = roomConnectedUsers[room.roomId].length;
-    if (playersInRoom >= 3) {
-      socket.broadcast.emit('room full', room.roomId);
+    if (playersInRoom >= 2) {
       io.to(room.roomId).emit('enable start');
       io.to(room.roomId).emit('start over');
+    }
+    if (playersInRoom === 4) {
+      console.log('full room');
+      socket.broadcast.emit('room full', room.roomId);
     }
   });
 
   socket.on('start over', (room) => {
     const playersInRoom = roomConnectedUsers[room.roomId].length;
 
-    if (playersInRoom >= 3) {
+    if (playersInRoom >= 2) {
       io.to(room.roomId).emit('start over');
     }
   });
 
   socket.on('leave room', (room, username, color) => {
-    io.to(room.roomId).emit('player left', room);
     // Push back the color in assignedColors so it can be available again
     if (assignedColors[room.roomId] !== undefined) {
       assignedColors[room.roomId].push(color);
@@ -142,6 +144,9 @@ io.on('connection', (socket) => {
 
       //Removes room if empty
       const playersInRoom = roomConnectedUsers[room.roomId].length;
+      if (playersInRoom < 2) {
+        io.to(room.roomId).emit('player left', room);
+      }
       if (playersInRoom === 0) {
         //Removes room if empty
         allRooms.splice(

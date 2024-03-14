@@ -72,7 +72,7 @@ export default function endGame(
 
   beforeGameContainer.appendChild(waitingSpan);
 
-  //Listen to if theres 4 players in room
+  //Listen to if theres 2-4 players in room
   socket.emit('start over', room);
   socket.on('start over', () => {
     console.log('start over is ok');
