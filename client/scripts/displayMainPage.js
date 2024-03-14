@@ -53,7 +53,7 @@ export default function displayMainPage() {
       }
       inputRoomName.value = '';
     }
-  })
+  });
 
   const instructionBtn = document.createElement('button');
   instructionBtn.innerText = 'How to play';
@@ -161,6 +161,22 @@ export default function displayMainPage() {
     if (fullRoom) {
       fullRoom.disabled = true;
       fullRoom.innerText += ' (FULL)';
+    }
+  });
+
+  socket.on('game on', (roomId) => {
+    const playingRoom = document.querySelector(`#room_btn_${roomId}`);
+    if (playingRoom) {
+      playingRoom.disabled = true;
+      playingRoom.innerText += ' (IN GAME)';
+    }
+  });
+
+  socket.on('game off', (roomId) => {
+    const playingRoom = document.querySelector(`#room_btn_${roomId}`);
+    if (playingRoom) {
+      playingRoom.disabled = false;
+      playingRoom.innerText = playingRoom.innerText.replace(' (IN GAME)', '');
     }
   });
 }
