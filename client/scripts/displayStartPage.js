@@ -45,6 +45,19 @@ export default function printStart() {
   passwordInput.classList.add('user_password_input');
   passwordInput.id = 'userPasswordInput';
   passwordInput.placeholder = 'Password';
+  passwordInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
+
+      if (!email || !password) {
+        createPopup('Please fill in both email and password fields');
+        return;
+      } else {
+        loginUser(email, password);
+      }
+    }
+  })
 
   passwordLabel.append(passwordSpan, passwordInput);
 

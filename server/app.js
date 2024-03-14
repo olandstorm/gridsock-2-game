@@ -25,7 +25,6 @@ const io = require('socket.io')(server, {
 const allRooms = [];
 const roomConnectedUsers = {};
 const gameGrids = [];
-//const gameGrid = Array(25).fill().map(() => Array(25).fill(null));
 
 io.on('connection', (socket) => {
   gameRoom.handleConnection(
@@ -34,7 +33,7 @@ io.on('connection', (socket) => {
     roomConnectedUsers,
     allRooms,
     assignedColors,
-    gameGrids //TODO: Kolla om den här blir samma för alla rum/game, annars måste vi skapa en ny varje gång ett rum skapas.
+    gameGrids
   );
 
   socket.on('chat', (arg) => {
@@ -85,7 +84,7 @@ io.on('connection', (socket) => {
       });
     }
 
-    console.log('connected users:', roomConnectedUsers);
+    //console.log('connected users:', roomConnectedUsers);
 
     socket.join(room.roomId);
 
@@ -141,7 +140,6 @@ io.on('connection', (socket) => {
       io.emit('all players', roomConnectedUsers);
       console.log('room coonected users', roomConnectedUsers);
 
-      //Removes room if empty
       const playersInRoom = roomConnectedUsers[room.roomId].length;
       if (playersInRoom < 2) {
         io.to(room.roomId).emit('player left', room);
