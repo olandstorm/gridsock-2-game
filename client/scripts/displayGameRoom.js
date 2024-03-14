@@ -165,8 +165,11 @@ export default function displayChatRoom(room) {
   sendMessageBtn.id = 'sendMessageBtn';
   sendMessageBtn.innerText = 'SEND';
   sendMessageBtn.addEventListener('click', () => {
-    sendChat(inputMessage, room);
-    inputMessage.value = '';
+    const writtenMessage = inputMessage.value;
+    if (writtenMessage) {
+      sendChat(writtenMessage, room);
+      inputMessage.value = '';
+    }
   });
 
   sendMessageContainer.append(inputLabel, sendMessageBtn);
