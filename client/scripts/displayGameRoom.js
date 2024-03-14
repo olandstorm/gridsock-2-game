@@ -175,8 +175,10 @@ export default function displayChatRoom(room) {
   inputMessage.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
       const writtenMessage = inputMessage.value;
-      sendChat(writtenMessage, room);
-      inputMessage.value = '';
+      if (writtenMessage) {
+        sendChat(writtenMessage, room);
+        inputMessage.value = '';
+      }
     }
   });
 
