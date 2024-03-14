@@ -157,12 +157,6 @@ export default function displayChatRoom(room) {
   inputMessage.classList.add('input_message');
   inputMessage.type = 'text';
   inputMessage.id = 'inputMessage';
-  inputMessage.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') {
-      sendChat(inputMessage, room);
-      inputMessage.value = '';
-    }
-  });
 
   inputLabel.append(inputSpan, inputMessage);
 
@@ -173,6 +167,14 @@ export default function displayChatRoom(room) {
   sendMessageBtn.addEventListener('click', () => {
     const writtenMessage = inputMessage.value;
     if (writtenMessage) {
+      sendChat(writtenMessage, room);
+      inputMessage.value = '';
+    }
+  });
+
+  inputMessage.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      const writtenMessage = inputMessage.value;
       sendChat(writtenMessage, room);
       inputMessage.value = '';
     }
