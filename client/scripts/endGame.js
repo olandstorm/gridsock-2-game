@@ -75,7 +75,6 @@ export default function endGame(
   //Listen to if theres 2-4 players in room
   socket.emit('start over', room);
   socket.on('start over', () => {
-    console.log('start over is ok');
     beforeGameContainer.innerHTML = '';
     const startGameBtn = document.createElement('button');
     startGameBtn.innerText = 'Play again';

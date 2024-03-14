@@ -115,7 +115,6 @@ io.on('connection', (socket) => {
       io.to(room.roomId).emit('start over');
     }
     if (playersInRoom === 4) {
-      console.log('full room');
       socket.broadcast.emit('room full', room.roomId);
     }
   });
