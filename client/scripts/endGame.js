@@ -67,15 +67,14 @@ export default function endGame(
   timerContainer.remove();
 
   const waitingSpan = document.createElement('span');
-  waitingSpan.innerText = 'Waiting for 4 players to connect...';
+  waitingSpan.innerText = 'Waiting for 2-4 players to connect...';
   waitingSpan.classList.add('waiting_span');
 
   beforeGameContainer.appendChild(waitingSpan);
 
-  //Listen to if theres 4 players in room
+  //Listen to if theres 2-4 players in room
   socket.emit('start over', room);
   socket.on('start over', () => {
-    console.log('start over is ok');
     beforeGameContainer.innerHTML = '';
     const startGameBtn = document.createElement('button');
     startGameBtn.innerText = 'Play again';
@@ -88,7 +87,7 @@ export default function endGame(
     socket.on('player left', () => {
       beforeGameContainer.innerHTML = '';
       const waitingSpan = document.createElement('span');
-      waitingSpan.innerText = 'Waiting for 4 players to connect...';
+      waitingSpan.innerText = 'Waiting for 2-4 players to connect...';
       waitingSpan.classList.add('waiting_span');
 
       beforeGameContainer.appendChild(waitingSpan);

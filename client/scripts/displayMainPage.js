@@ -1,6 +1,7 @@
 import { socket } from '../main.js';
 import updateRoomList from './updateRoomList';
 import displayChatRoom from './displayGameRoom.js';
+import closePopup from './lib/closePopup.mjs';
 import createPopup from './lib/createPopup.mjs';
 import printStart from './displayStartPage.js';
 import updateColor from './lib/updateColorInfo.js';
@@ -57,12 +58,48 @@ export default function displayMainPage() {
   const instructionBtn = document.createElement('button');
   instructionBtn.innerText = 'How to play';
   instructionBtn.addEventListener('click', () => {
-    createPopup(
-      `The game starts with a blank canvas.
-    Click on the squares to color the square.
-    The goal is to cover as much of the canvas as possible with one's color before time runs out.`,
-      'instruction_popup'
-    );
+    const popupBackground = document.createElement('div');
+    popupBackground.classList.add('popup_background');
+    const popup = document.createElement('div');
+    popup.classList.add('popup_container');
+    popup.classList.add('instruction_popup');
+
+    const instructionHeader = document.createElement('h2');
+    instructionHeader.innerText = 'Instructions';
+
+    popup.append(instructionHeader);
+
+    const popupText = document.createElement('span');
+    popupText.classList.add('popup_text');
+
+    const instructions = `Dive into the vibrant world of Color Chaos, where randomness adds to the fun! 
+    Embrace the unpredictability as you leap into the colorful grid, each player assigned a unique hue - pink, blue, green, or yellow. 
+    Click away with gusto, covering squares in your signature shade. 
+    But don't forget the strategy - stealing squares from your pals is all part of the game! 
+    Can you outwit your buddies and claim the coveted title of color champion? 
+    Let loose, laugh it up, and let the chaos ensue!`;
+
+    const rows = instructions.split('\n');
+
+    rows.forEach((row) => {
+      const span = document.createElement('span');
+      span.innerText = row.trim();
+
+      popupText.appendChild(span);
+    });
+
+    popup.appendChild(popupText);
+
+    const closePopupBtn = document.createElement('button');
+    closePopupBtn.innerText = 'Close';
+    closePopupBtn.classList.add('close_popup_btn');
+    closePopupBtn.addEventListener('click', () => {
+      closePopup(popupBackground);
+    });
+
+    popup.appendChild(closePopupBtn);
+    popupBackground.appendChild(popup);
+    document.body.appendChild(popupBackground);
   });
 
   const logoutBtn = document.createElement('button');
