@@ -157,6 +157,13 @@ export default function displayChatRoom(room) {
   inputMessage.classList.add('input_message');
   inputMessage.type = 'text';
   inputMessage.id = 'inputMessage';
+  inputMessage.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      sendChat(inputMessage, room);
+      inputMessage.value = '';
+    }
+  });
 
   inputLabel.append(inputSpan, inputMessage);
 
