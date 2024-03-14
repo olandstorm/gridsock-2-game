@@ -23,13 +23,15 @@ export default function createGameGrid(
 
   gridContainer.addEventListener('click', (event) => {
     const clickedCell = event.target;
-    if (!clickedCell) {
-      return;
-    }
+
     const row = clickedCell.dataset.row;
     const col = clickedCell.dataset.col;
     const color = sessionStorage.getItem('color');
     const player = localStorage.getItem('userId');
+
+    if (row === undefined || col === undefined) {
+      return;
+    }
 
     socket.emit('cellClicked', { row, col, color, roomId, player });
   });
