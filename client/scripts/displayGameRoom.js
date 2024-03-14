@@ -6,6 +6,7 @@ import updatePlayers from './updatePlayers.js';
 import { socket } from '../main.js';
 import printStart from './displayStartPage.js';
 import createPopup from './lib/createPopup.mjs';
+import endGame from './endGame.js';
 
 export default function displayChatRoom(room) {
   document.body.innerHTML = '';
@@ -109,8 +110,19 @@ export default function displayChatRoom(room) {
 
     startGameBtn.addEventListener('click', () => {
       socket.emit('startCountdown', room);
+      socket.off('enable start');
     });
     beforeGameContainer.append(startGameBtn);
+  });
+
+  //If someone leaves
+  socket.on('player left', () => {
+    beforeGameContainer.innerHTML = '';
+    const waitingSpan = document.createElement('span');
+    waitingSpan.innerText = 'Waiting for 4 players to connect...';
+    waitingSpan.classList.add('waiting_span');
+
+    beforeGameContainer.appendChild(waitingSpan);
   });
 
   socket.on('countdown', (countdown) => {
@@ -226,10 +238,16 @@ export default function displayChatRoom(room) {
   }
 
   //Listen to when game ends from server
-  socket.on('gameEnd', () => {
-    //Additional functions...score, save board etc
+  socket.on('gameEnd', (gameIdScore) => {
     stopTimer(gameTimer);
-    createPopup('Times up!');
+    endGame(
+      socket,
+      room,
+      gameIdScore,
+      gameContainer,
+      timerContainer,
+      beforeGameContainer
+    );
   });
 
   function stopTimer(timer) {

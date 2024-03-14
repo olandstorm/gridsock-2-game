@@ -64,7 +64,7 @@ io.on('connection', (socket) => {
   });
 
   // Allow the client to join specific room
-  socket.on('join room', (room, username) => {
+  socket.on('join room', (room, username, uuid) => {
     const color = selectColor(room.roomId);
 
     if (!roomConnectedUsers[room.roomId]) {
@@ -79,6 +79,7 @@ io.on('connection', (socket) => {
     if (!existingUser) {
       roomConnectedUsers[room.roomId].push({
         name: username,
+        uuid: uuid,
         userId: socket.id,
         color: color,
       });
@@ -109,13 +110,23 @@ io.on('connection', (socket) => {
 
     //Disable button if theres 4 players in room
     const playersInRoom = roomConnectedUsers[room.roomId].length;
-    if (playersInRoom >= 2) {
+    if (playersInRoom >= 3) {
       socket.broadcast.emit('room full', room.roomId);
-      io.emit('enable start');
+      io.to(room.roomId).emit('enable start');
+      io.to(room.roomId).emit('start over');
+    }
+  });
+
+  socket.on('start over', (room) => {
+    const playersInRoom = roomConnectedUsers[room.roomId].length;
+
+    if (playersInRoom >= 3) {
+      io.to(room.roomId).emit('start over');
     }
   });
 
   socket.on('leave room', (room, username, color) => {
+    io.to(room.roomId).emit('player left', room);
     // Push back the color in assignedColors so it can be available again
     if (assignedColors[room.roomId] !== undefined) {
       assignedColors[room.roomId].push(color);

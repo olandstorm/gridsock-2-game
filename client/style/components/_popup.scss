@@ -36,10 +36,35 @@
     }
   }
 
+  .old_results_popup {
+    max-width: none;
+  }
+
   .instruction_popup {
     background: $bg-gradient;
     gap: 40px;
     padding: 40px 40px 30px;
     max-width: 650px;
   }
+}
+
+.old_result_list_item {
+  text-transform: capitalize;
+}
+
+.winning_span_pink {
+  text-transform: uppercase;
+  color: $game-color-pink;
+}
+.winning_span_blue {
+  text-transform: uppercase;
+  color: $game-color-blue;
+}
+.winning_span_yellow {
+  text-transform: uppercase;
+  color: $game-color-yellow;
+}
+.winning_span_green {
+  text-transform: uppercase;
+  color: $game-color-green;
 }
