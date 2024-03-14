@@ -42,7 +42,7 @@ router.post('/add', (req, res) => {
                 userName: name,
                 UUID: UUID
             } 
-            res.json({message: 'New user created', newUser: newUserResult});
+            res.json({newUser: newUserResult});
             return;
 
         });
