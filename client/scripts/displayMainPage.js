@@ -2,7 +2,6 @@ import { socket } from '../main.js';
 import updateRoomList from './updateRoomList';
 import displayChatRoom from './displayGameRoom.js';
 import closePopup from './lib/closePopup.mjs';
-import createPopup from './lib/createPopup.mjs';
 import printStart from './displayStartPage.js';
 import updateColor from './lib/updateColorInfo.js';
 
@@ -51,7 +50,7 @@ export default function displayMainPage() {
       }
       inputRoomName.value = '';
     }
-  })
+  });
 
   const instructionBtn = document.createElement('button');
   instructionBtn.innerText = 'How to play';
@@ -158,6 +157,22 @@ export default function displayMainPage() {
     if (fullRoom) {
       fullRoom.disabled = true;
       fullRoom.innerText += ' (FULL)';
+    }
+  });
+
+  socket.on('game on', (roomId) => {
+    const playingRoom = document.querySelector(`#room_btn_${roomId}`);
+    if (playingRoom) {
+      playingRoom.disabled = true;
+      playingRoom.innerText += ' (IN GAME)';
+    }
+  });
+
+  socket.on('game off', (roomId) => {
+    const playingRoom = document.querySelector(`#room_btn_${roomId}`);
+    if (playingRoom) {
+      playingRoom.disabled = false;
+      playingRoom.innerText = playingRoom.innerText.replace(' (IN GAME)', '');
     }
   });
 }

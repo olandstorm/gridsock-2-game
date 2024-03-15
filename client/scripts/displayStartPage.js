@@ -1,4 +1,3 @@
-import displayMainPage from './displayMainPage';
 import displayNewUser from './displayNewUser.js';
 import createPopup from './lib/createPopup.mjs';
 import loginUser from './loginUser.js';
@@ -57,7 +56,7 @@ export default function printStart() {
         loginUser(email, password);
       }
     }
-  })
+  });
 
   passwordLabel.append(passwordSpan, passwordInput);
 

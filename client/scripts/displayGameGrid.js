@@ -11,6 +11,8 @@ export default function createGameGrid(
   const gridContainer = document.createElement('div');
   gridContainer.classList.add('grid_container');
 
+  const cellState = new Array(25).fill().map(() => new Array(25).fill(false));
+
   for (let x = 0; x < 25; x++) {
     for (let y = 0; y < 25; y++) {
       const cell = document.createElement('div');

@@ -4,9 +4,8 @@ import sendChat from './sendChat.js';
 import createGameGrid from './displayGameGrid.js';
 import updatePlayers from './updatePlayers.js';
 import { socket } from '../main.js';
-import printStart from './displayStartPage.js';
-import createPopup from './lib/createPopup.mjs';
 import endGame from './endGame.js';
+import displayNewGame from './displayNewGame.js';
 
 export default function displayChatRoom(room) {
   document.body.innerHTML = '';
@@ -73,11 +72,13 @@ export default function displayChatRoom(room) {
   const beforeGameContainer = document.createElement('div');
   beforeGameContainer.classList.add('before_game_container');
 
-  const waitingSpan = document.createElement('span');
-  waitingSpan.innerText = 'Waiting for 2-4 players to connect...';
-  waitingSpan.classList.add('waiting_span');
-
-  beforeGameContainer.appendChild(waitingSpan);
+  const waiting = document.querySelector('.waiting_span');
+  if (!waiting) {
+    const waitingSpan = document.createElement('span');
+    waitingSpan.innerText = 'Waiting for 2-4 players to connect...';
+    waitingSpan.classList.add('waiting_span');
+    beforeGameContainer.appendChild(waitingSpan);
+  }
 
   const timerContainer = document.createElement('div');
   timerContainer.classList.add('timer_container');
@@ -173,8 +174,10 @@ export default function displayChatRoom(room) {
   inputMessage.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
       const writtenMessage = inputMessage.value;
-      sendChat(writtenMessage, room);
-      inputMessage.value = '';
+      if (writtenMessage) {
+        sendChat(writtenMessage, room);
+        inputMessage.value = '';
+      }
     }
   });
 
@@ -256,6 +259,10 @@ export default function displayChatRoom(room) {
       timerContainer,
       beforeGameContainer
     );
+  });
+
+  socket.on('game without click', () => {
+    displayNewGame(socket, room, beforeGameContainer, timerContainer);
   });
 
   function stopTimer(timer) {
