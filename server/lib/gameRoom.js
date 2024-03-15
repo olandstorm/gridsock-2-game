@@ -40,9 +40,9 @@ const gameRoom = {
           col,
           color,
         });
-      } else {
+      }/* else {
         console.error(`Invalid cell position: row ${row}, col ${col}`);
-      }
+      }*/
     });
 
     //Listen to when time is up.

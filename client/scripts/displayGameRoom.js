@@ -29,7 +29,6 @@ export default function displayChatRoom(room) {
   leaveRoomBtn.classList.add('leave_room_btn');
   leaveRoomBtn.innerText = 'Leave Room';
   leaveRoomBtn.addEventListener('click', () => {
-    console.log(room.roomId);
     socket.emit(
       'leave room',
       room,

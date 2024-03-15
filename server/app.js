@@ -134,7 +134,6 @@ io.on('connection', (socket) => {
       socket.leave(room.roomId);
 
       io.emit('all players', roomConnectedUsers);
-      console.log('room coonected users', roomConnectedUsers);
 
       const playersInRoom = roomConnectedUsers[room.roomId].length;
       if (playersInRoom < 2) {

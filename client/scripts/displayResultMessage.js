@@ -1,5 +1,4 @@
 export default function displayResultMessage(gameGrid) {
-  console.log('gameGrid in displayResultMessage', gameGrid);
 
   const innerGrid = gameGrid.gameGrid;
   const popUpResult = document.createElement('div');
