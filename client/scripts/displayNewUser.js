@@ -50,6 +50,21 @@ export default function displayNewUser(loginContainer) {
   passwordInput.classList.add('user_password_input');
   passwordInput.id = 'userPasswordInput';
   passwordInput.placeholder = 'Password';
+  passwordInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      const email = emailInput.value.trim();
+      const name = nameInput.value.trim();
+      const password = passwordInput.value.trim();
+  
+      if (!email || !password || !name) {
+        createPopup('Please fill in all fields');
+        return;
+      } else {
+        saveNewUser(name, email, password);
+      }
+      passwordInput.value = '';
+    }
+  })
 
   passwordLabel.append(passwordSpan, passwordInput);
 

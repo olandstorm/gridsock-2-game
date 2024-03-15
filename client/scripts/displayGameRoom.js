@@ -4,9 +4,8 @@ import sendChat from './sendChat.js';
 import createGameGrid from './displayGameGrid.js';
 import updatePlayers from './updatePlayers.js';
 import { socket } from '../main.js';
-import printStart from './displayStartPage.js';
-import createPopup from './lib/createPopup.mjs';
 import endGame from './endGame.js';
+import displayNewGame from './displayNewGame.js';
 
 export default function displayChatRoom(room) {
   document.body.innerHTML = '';
@@ -14,7 +13,6 @@ export default function displayChatRoom(room) {
   const chatPage = document.createElement('div');
   chatPage.classList.add('chat_page');
 
-  // create nav element
   const navBar = document.createElement('nav');
   navBar.classList.add('nav_bar');
 
@@ -30,7 +28,6 @@ export default function displayChatRoom(room) {
   leaveRoomBtn.classList.add('leave_room_btn');
   leaveRoomBtn.innerText = 'Leave Room';
   leaveRoomBtn.addEventListener('click', () => {
-    console.log(room.roomId);
     socket.emit(
       'leave room',
       room,
@@ -40,7 +37,7 @@ export default function displayChatRoom(room) {
     updatePlayers(room.roomId);
     socket.removeAllListeners();
     displayMainPage();
-    /*     socket.on('room list', updateRoomList); */
+    
     sessionStorage.removeItem('color');
   });
 
@@ -75,11 +72,13 @@ export default function displayChatRoom(room) {
   const beforeGameContainer = document.createElement('div');
   beforeGameContainer.classList.add('before_game_container');
 
-  const waitingSpan = document.createElement('span');
-  waitingSpan.innerText = 'Waiting for 4 players to connect...';
-  waitingSpan.classList.add('waiting_span');
-
-  beforeGameContainer.appendChild(waitingSpan);
+  const waiting = document.querySelector('.waiting_span');
+  if (!waiting) {
+    const waitingSpan = document.createElement('span');
+    waitingSpan.innerText = 'Waiting for 2-4 players to connect...';
+    waitingSpan.classList.add('waiting_span');
+    beforeGameContainer.appendChild(waitingSpan);
+  }
 
   const timerContainer = document.createElement('div');
   timerContainer.classList.add('timer_container');
@@ -101,7 +100,7 @@ export default function displayChatRoom(room) {
 
   subTextContainer.append(subTextSpan, shortInstruction);
 
-  //Listen to if theres 4 players in room
+  //Listen to if there is 2-4 players in room
   socket.on('enable start', () => {
     beforeGameContainer.innerHTML = '';
     const startGameBtn = document.createElement('button');
@@ -119,7 +118,7 @@ export default function displayChatRoom(room) {
   socket.on('player left', () => {
     beforeGameContainer.innerHTML = '';
     const waitingSpan = document.createElement('span');
-    waitingSpan.innerText = 'Waiting for 4 players to connect...';
+    waitingSpan.innerText = 'Waiting for 2-4 players to connect...';
     waitingSpan.classList.add('waiting_span');
 
     beforeGameContainer.appendChild(waitingSpan);
@@ -165,8 +164,21 @@ export default function displayChatRoom(room) {
   sendMessageBtn.id = 'sendMessageBtn';
   sendMessageBtn.innerText = 'SEND';
   sendMessageBtn.addEventListener('click', () => {
-    sendChat(inputMessage, room);
-    inputMessage.value = '';
+    const writtenMessage = inputMessage.value;
+    if (writtenMessage) {
+      sendChat(writtenMessage, room);
+      inputMessage.value = '';
+    }
+  });
+
+  inputMessage.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      const writtenMessage = inputMessage.value;
+      if (writtenMessage) {
+        sendChat(writtenMessage, room);
+        inputMessage.value = '';
+      }
+    }
   });
 
   sendMessageContainer.append(inputLabel, sendMessageBtn);
@@ -197,7 +209,6 @@ export default function displayChatRoom(room) {
 
   //Listen to timeinfo from server
   socket.on('gameDuration', (duration) => {
-    console.log('gameDuration', duration);
 
     const seconds = Math.floor(duration / 1000);
     const minutes = Math.floor(seconds / 60);
@@ -248,6 +259,10 @@ export default function displayChatRoom(room) {
       timerContainer,
       beforeGameContainer
     );
+  });
+
+  socket.on('game without click', () => {
+    displayNewGame(socket, room, beforeGameContainer, timerContainer);
   });
 
   function stopTimer(timer) {

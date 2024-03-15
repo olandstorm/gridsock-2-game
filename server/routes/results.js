@@ -6,7 +6,7 @@ const connection = require('../lib/conn');
 
 
 
-//get specific result
+// GET specific result
 router.get('/:gameId', (req, res) => {
 	const gameId = req.params.gameId;
 
@@ -30,12 +30,11 @@ router.get('/:gameId', (req, res) => {
 			
 		});
 		res.status(200).json({ gameGrid: gameGrid });
-		//console.log('gameGrid', gameGrid);
 	})
 })
 
 
-//save results
+// save results
 router.post('/add', (req, res) => {
 	const gameResult = req.body;
 	const gameUUID = randomUUID();

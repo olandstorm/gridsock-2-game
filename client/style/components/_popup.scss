@@ -45,6 +45,12 @@
     gap: 40px;
     padding: 40px 40px 30px;
     max-width: 650px;
+    .popup_text {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+      row-gap: 35px;
+    }
   }
 }
 

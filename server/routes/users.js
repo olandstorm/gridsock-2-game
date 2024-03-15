@@ -49,7 +49,7 @@ router.post('/add', (req, res) => {
     });
 });
 
-//GET user listing
+// GET user listing
 router.get('/', (req, res) => {
     const query = 'SELECT * FROM users';
     connection.query(query, (err, data) => {
@@ -60,10 +60,9 @@ router.get('/', (req, res) => {
     });
 });
 
-//Login user
+// Login user
 router.post('/login', (req, res) => {
-    const { email, password } = req.body;
-    console.log('client password', req.body);
+    const { email, password } = req.body;               
 
     if (email) {
         if (!email.includes('@')) {
@@ -86,8 +85,7 @@ router.post('/login', (req, res) => {
             const dbPassword = dbPasswordResult[0].userPassword;
             const dbUserName = dbPasswordResult[0].userName;
             const dbUUID = dbPasswordResult[0].UUID;
-            //console.log('dbPassword result: ', dbPasswordResult[0].userPassword);
-            //console.log('saltvärder', process.env.SALT_KEY);
+
             let decryptedPassword = CryptoJS.AES.decrypt(dbPassword, process.env.SALT_KEY).toString(CryptoJS.enc.Utf8);
             if (decryptedPassword === password) {
                 res.json({UUID: dbUUID, name: dbUserName });
@@ -102,12 +100,6 @@ router.post('/login', (req, res) => {
         return;
     }
 });
-
-
-
-
-
-
 
 
 module.exports = router;

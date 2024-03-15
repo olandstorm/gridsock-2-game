@@ -10,9 +10,7 @@ const gameRoom = {
     assignedColors,
     gameGrids
   ) => {
-    //connections to game room
 
-    //Listen to countdown
     socket.on('startCountdown', (room) => {
       let countdown = 3;
       const countdownToStart = setInterval(() => {
@@ -23,6 +21,7 @@ const gameRoom = {
           clearInterval(countdownToStart);
           if (!gameStarted) {
             gameStarted = true;
+            io.emit('game on', room.roomId);
             io.to(room.roomId).emit('gameStart');
             //Send timeinfo to client
             io.to(room.roomId).emit('gameDuration', gameDuration);
@@ -31,28 +30,41 @@ const gameRoom = {
       }, 1000);
     });
 
-    // Handle when a player click on a cell
     socket.on('cellClicked', ({ row, col, color, roomId, player }) => {
       //update gameGrid on server
       let gameGrid = gameGrids[roomId];
       if (gameGrid.length > row && gameGrid[row].length > col) {
         gameGrid[row][col] = { color, player };
 
-        // Här kan du lägga till logik för att hantera vilken spelare som klickade och uppdatera alla andra klienter
         io.to(roomId).emit('updateCell', {
           row,
           col,
-          color /* players color */,
+          color,
         });
-      } else {
-        console.error(`Invalid cell position: row ${row}, col ${col}`);
       }
     });
 
+    function calculateNull(gameGrid) {
+      const allCellsNull = gameGrid.every((row) =>
+        row.every((cell) => cell === null)
+      );
+
+      if (allCellsNull) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
     //Listen to when time is up.
     socket.on('endGame', async (room) => {
-      if (gameStarted) {
-        await endGameSession(room.roomId);
+      if (calculateNull(gameGrids[room.roomId])) {
+        gameStarted = false;
+        io.to(room.roomId).emit('game without click');
+      } else {
+        if (gameStarted) {
+          await endGameSession(room.roomId);
+        }
       }
     });
 
@@ -66,7 +78,6 @@ const gameRoom = {
 
         if (disconnectedUser) {
           const disconnectedRoomId = roomId;
-          console.log('Disconnected user was in room:', disconnectedRoomId);
 
           //Remove user from room if disconnected
           roomConnectedUsers[roomId] = roomConnectedUsers[roomId].filter(
@@ -99,11 +110,12 @@ const gameRoom = {
 
     async function endGameSession(roomId) {
       gameStarted = false;
+      io.emit('game off', roomId);
       const gameGrid = gameGrids[roomId];
       const score = calculateResult(gameGrid, roomConnectedUsers, roomId);
-      console.log('Score', score);
+
       const gameId = await saveGameGridToDB(gameGrid);
-      console.log('GameId', gameId);
+
       gameGrids[roomId] = Array(25)
         .fill()
         .map(() => Array(25).fill(null));
@@ -117,8 +129,6 @@ const gameRoom = {
       });
     }
   },
-
-  //other functions and logic for game
 };
 
 module.exports = gameRoom;

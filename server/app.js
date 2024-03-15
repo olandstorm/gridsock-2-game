@@ -21,11 +21,9 @@ const io = require('socket.io')(server, {
   },
 });
 
-// List of all rooms
 const allRooms = [];
 const roomConnectedUsers = {};
 const gameGrids = [];
-//const gameGrid = Array(25).fill().map(() => Array(25).fill(null));
 
 io.on('connection', (socket) => {
   gameRoom.handleConnection(
@@ -34,7 +32,7 @@ io.on('connection', (socket) => {
     roomConnectedUsers,
     allRooms,
     assignedColors,
-    gameGrids //TODO: Kolla om den här blir samma för alla rum/game, annars måste vi skapa en ny varje gång ett rum skapas.
+    gameGrids
   );
 
   socket.on('chat', (arg) => {
@@ -53,7 +51,7 @@ io.on('connection', (socket) => {
   socket.on('create room', (room) => {
     const roomId = randomUUID();
     allRooms.push({ name: room, roomId: roomId });
-    // Create gameGrid in specific room if it doesn´t exist.
+    // Create gameGrid in specific room
     if (!gameGrids[roomId]) {
       gameGrids[roomId] = Array(25)
         .fill()
@@ -71,7 +69,7 @@ io.on('connection', (socket) => {
       roomConnectedUsers[room.roomId] = [];
     }
 
-    // If the room does not include the username, push the username
+  
     const existingUser = roomConnectedUsers[room.roomId].find(
       (user) => user.userId === socket.id
     );
@@ -85,8 +83,6 @@ io.on('connection', (socket) => {
       });
     }
 
-    console.log('connected users:', roomConnectedUsers);
-
     socket.join(room.roomId);
 
     io.emit('all players', roomConnectedUsers);
@@ -96,37 +92,37 @@ io.on('connection', (socket) => {
       color: color,
     });
 
-    //Send to ONE
+    
     io.to(socket.id).emit(
       'chat',
       generateMessage('Admin', 'Welcome to Color Chaos!')
     );
 
-    //After LOGIN is done we can change user to display name.
-    //send to everyone but "me"
+    
     socket.broadcast
       .to(room.roomId)
       .emit('chat', generateMessage('Admin', `New user has joined`, room.name));
 
-    //Disable button if theres 4 players in room
+    //Disable button if there is 4 players in room
     const playersInRoom = roomConnectedUsers[room.roomId].length;
-    if (playersInRoom >= 3) {
-      socket.broadcast.emit('room full', room.roomId);
+    if (playersInRoom >= 2) {
       io.to(room.roomId).emit('enable start');
       io.to(room.roomId).emit('start over');
+    }
+    if (playersInRoom === 4) {
+      socket.broadcast.emit('room full', room.roomId);
     }
   });
 
   socket.on('start over', (room) => {
     const playersInRoom = roomConnectedUsers[room.roomId].length;
 
-    if (playersInRoom >= 3) {
+    if (playersInRoom >= 2) {
       io.to(room.roomId).emit('start over');
     }
   });
 
   socket.on('leave room', (room, username, color) => {
-    io.to(room.roomId).emit('player left', room);
     // Push back the color in assignedColors so it can be available again
     if (assignedColors[room.roomId] !== undefined) {
       assignedColors[room.roomId].push(color);
@@ -138,10 +134,11 @@ io.on('connection', (socket) => {
       socket.leave(room.roomId);
 
       io.emit('all players', roomConnectedUsers);
-      console.log('room coonected users', roomConnectedUsers);
 
-      //Removes room if empty
       const playersInRoom = roomConnectedUsers[room.roomId].length;
+      if (playersInRoom < 2) {
+        io.to(room.roomId).emit('player left', room);
+      }
       if (playersInRoom === 0) {
         //Removes room if empty
         allRooms.splice(
@@ -153,13 +150,6 @@ io.on('connection', (socket) => {
   });
 });
 
-io.of('/').adapter.on('join-room', (room, id) => {
-  console.log(`socket ${id} has joined room ${room}`);
-});
-
-io.of('/').adapter.on('leave-room', (room, id) => {
-  console.log(`socket ${id} has left room ${room}`);
-});
 
 const PORT = process.env.PORT || 3000;
 

@@ -7,9 +7,11 @@ export default function createGameGrid(
   timerContainer
 ) {
   beforeGameContainer.innerHTML = '';
-  // create game grid container
+  
   const gridContainer = document.createElement('div');
   gridContainer.classList.add('grid_container');
+
+  const cellState = new Array(25).fill().map(() => new Array(25).fill(false));
 
   for (let x = 0; x < 25; x++) {
     for (let y = 0; y < 25; y++) {
@@ -23,13 +25,15 @@ export default function createGameGrid(
 
   gridContainer.addEventListener('click', (event) => {
     const clickedCell = event.target;
-    if (!clickedCell) {
-      return;
-    }
+
     const row = clickedCell.dataset.row;
     const col = clickedCell.dataset.col;
     const color = sessionStorage.getItem('color');
     const player = localStorage.getItem('userId');
+
+    if (row === undefined || col === undefined) {
+      return;
+    }
 
     socket.emit('cellClicked', { row, col, color, roomId, player });
   });

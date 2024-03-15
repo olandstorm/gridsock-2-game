@@ -2,7 +2,6 @@ import { API_URL } from '../main.js';
 import displayOldResult from './displayOldResult.js';
 
 export default function updateChat(chat, chatBox) {
-  console.log(chat);
   const chatList = document.querySelector('#chatList');
   const li = document.createElement('li');
   let user = chat.user;
@@ -35,7 +34,7 @@ export default function updateChat(chat, chatBox) {
   if (gameId) {
     const oldGameBtn = document.createElement('button');
     oldGameBtn.classList.add('old_game_btn');
-    oldGameBtn.innerText = 'here.';
+    oldGameBtn.innerText = 'here';
 
     oldGameBtn.addEventListener('click', async () => {
       const gameResult = await fetch(API_URL + 'results/' + gameId).then(

@@ -1,4 +1,3 @@
-import displayMainPage from './displayMainPage';
 import displayNewUser from './displayNewUser.js';
 import createPopup from './lib/createPopup.mjs';
 import loginUser from './loginUser.js';
@@ -6,7 +5,7 @@ import loginUser from './loginUser.js';
 export default function printStart() {
   document.body.innerHTML = '';
 
-  // create main container
+  
   const mainContainer = document.createElement('div');
   mainContainer.classList.add('main_container');
 
@@ -45,6 +44,19 @@ export default function printStart() {
   passwordInput.classList.add('user_password_input');
   passwordInput.id = 'userPasswordInput';
   passwordInput.placeholder = 'Password';
+  passwordInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
+
+      if (!email || !password) {
+        createPopup('Please fill in both email and password fields');
+        return;
+      } else {
+        loginUser(email, password);
+      }
+    }
+  });
 
   passwordLabel.append(passwordSpan, passwordInput);
 
@@ -78,6 +90,6 @@ export default function printStart() {
 
   mainContainer.append(logoBigImg, loginContainer);
 
-  // add mainContainer to body
+  
   document.body.append(mainContainer);
 }
