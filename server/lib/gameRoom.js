@@ -41,9 +41,7 @@ const gameRoom = {
           col,
           color,
         });
-      }/* else {
-        console.error(`Invalid cell position: row ${row}, col ${col}`);
-      }*/
+      }
     });
 
     function calculateNull(gameGrid) {
@@ -61,7 +59,6 @@ const gameRoom = {
     //Listen to when time is up.
     socket.on('endGame', async (room) => {
       if (calculateNull(gameGrids[room.roomId])) {
-        console.log('NO CELL CLICKED!');
         gameStarted = false;
         io.to(room.roomId).emit('game without click');
       } else {
