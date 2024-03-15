@@ -114,3 +114,8 @@ h3 {
 .login_label_span {
   margin-left: 7px;
 }
+
+.rooms_container {
+  flex-direction: row;
+  column-gap: 20px;
+}
