@@ -72,7 +72,7 @@ export default function endGame(
 
   beforeGameContainer.appendChild(waitingSpan);
 
-  //Listen to if theres 2-4 players in room
+  //Listen to if there is 2-4 players in room
   socket.emit('start over', room);
   socket.on('start over', () => {
     beforeGameContainer.innerHTML = '';
@@ -83,6 +83,7 @@ export default function endGame(
       socket.emit('startCountdown', room);
     });
     beforeGameContainer.append(startGameBtn);
+    
     //If someone leaves
     socket.on('player left', () => {
       beforeGameContainer.innerHTML = '';

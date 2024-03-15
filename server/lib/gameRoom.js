@@ -10,9 +10,7 @@ const gameRoom = {
     assignedColors,
     gameGrids
   ) => {
-    //connections to game room
 
-    //Listen to countdown
     socket.on('startCountdown', (room) => {
       let countdown = 3;
       const countdownToStart = setInterval(() => {
@@ -31,7 +29,6 @@ const gameRoom = {
       }, 1000);
     });
 
-    // Handle when a player click on a cell
     socket.on('cellClicked', ({ row, col, color, roomId, player }) => {
       //update gameGrid on server
       let gameGrid = gameGrids[roomId];
@@ -65,7 +62,6 @@ const gameRoom = {
 
         if (disconnectedUser) {
           const disconnectedRoomId = roomId;
-          //console.log('Disconnected user was in room:', disconnectedRoomId);
 
           //Remove user from room if disconnected
           roomConnectedUsers[roomId] = roomConnectedUsers[roomId].filter(
@@ -116,8 +112,6 @@ const gameRoom = {
       });
     }
   },
-
-  //other functions and logic for game
 };
 
 module.exports = gameRoom;

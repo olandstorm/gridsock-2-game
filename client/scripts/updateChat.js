@@ -2,7 +2,6 @@ import { API_URL } from '../main.js';
 import displayOldResult from './displayOldResult.js';
 
 export default function updateChat(chat, chatBox) {
-  console.log(chat);
   const chatList = document.querySelector('#chatList');
   const li = document.createElement('li');
   let user = chat.user;

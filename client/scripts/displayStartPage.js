@@ -6,7 +6,7 @@ import loginUser from './loginUser.js';
 export default function printStart() {
   document.body.innerHTML = '';
 
-  // create main container
+  
   const mainContainer = document.createElement('div');
   mainContainer.classList.add('main_container');
 
@@ -91,6 +91,6 @@ export default function printStart() {
 
   mainContainer.append(logoBigImg, loginContainer);
 
-  // add mainContainer to body
+  
   document.body.append(mainContainer);
 }
