@@ -7,7 +7,7 @@ export default function createGameGrid(
   timerContainer
 ) {
   beforeGameContainer.innerHTML = '';
-  // create game grid container
+  
   const gridContainer = document.createElement('div');
   gridContainer.classList.add('grid_container');
 

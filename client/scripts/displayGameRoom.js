@@ -13,7 +13,6 @@ export default function displayChatRoom(room) {
   const chatPage = document.createElement('div');
   chatPage.classList.add('chat_page');
 
-  // create nav element
   const navBar = document.createElement('nav');
   navBar.classList.add('nav_bar');
 
@@ -29,7 +28,6 @@ export default function displayChatRoom(room) {
   leaveRoomBtn.classList.add('leave_room_btn');
   leaveRoomBtn.innerText = 'Leave Room';
   leaveRoomBtn.addEventListener('click', () => {
-    console.log(room.roomId);
     socket.emit(
       'leave room',
       room,
@@ -39,7 +37,7 @@ export default function displayChatRoom(room) {
     updatePlayers(room.roomId);
     socket.removeAllListeners();
     displayMainPage();
-    /*     socket.on('room list', updateRoomList); */
+    
     sessionStorage.removeItem('color');
   });
 
@@ -102,7 +100,7 @@ export default function displayChatRoom(room) {
 
   subTextContainer.append(subTextSpan, shortInstruction);
 
-  //Listen to if theres 2-4 players in room
+  //Listen to if there is 2-4 players in room
   socket.on('enable start', () => {
     beforeGameContainer.innerHTML = '';
     const startGameBtn = document.createElement('button');
@@ -211,7 +209,6 @@ export default function displayChatRoom(room) {
 
   //Listen to timeinfo from server
   socket.on('gameDuration', (duration) => {
-    console.log('gameDuration', duration);
 
     const seconds = Math.floor(duration / 1000);
     const minutes = Math.floor(seconds / 60);

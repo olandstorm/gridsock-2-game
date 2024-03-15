@@ -1,5 +1,3 @@
-//function to calculate end result when game is over.
-
 export default function saveGameResult() {
 	const playerColors = ['pink', 'blue', 'green', 'yellow'];
 	const result = [];
@@ -21,5 +19,4 @@ export default function saveGameResult() {
 			result.push(cell);
 		}
 	}
-	//saveResultToDatabase(result);
 }

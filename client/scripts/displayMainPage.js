@@ -8,10 +8,8 @@ import updateColor from './lib/updateColorInfo.js';
 let currentColor = null;
 
 export default function displayMainPage() {
-  // Rensa body från allt innehåll
   document.body.innerHTML = '';
 
-  // create main container
   const mainContainer = document.createElement('div');
   mainContainer.classList.add('main_container');
 
@@ -148,7 +146,6 @@ export default function displayMainPage() {
     createRoomSection
   );
 
-  // add mainContainer to body
   document.body.append(stickyContainer, mainContainer);
 
   // Request room list initially and update UI

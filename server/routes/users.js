@@ -49,7 +49,7 @@ router.post('/add', (req, res) => {
     });
 });
 
-//GET user listing
+// GET user listing
 router.get('/', (req, res) => {
     const query = 'SELECT * FROM users';
     connection.query(query, (err, data) => {
@@ -60,7 +60,7 @@ router.get('/', (req, res) => {
     });
 });
 
-//Login user
+// Login user
 router.post('/login', (req, res) => {
     const { email, password } = req.body;               
 
@@ -100,12 +100,6 @@ router.post('/login', (req, res) => {
         return;
     }
 });
-
-
-
-
-
-
 
 
 module.exports = router;
