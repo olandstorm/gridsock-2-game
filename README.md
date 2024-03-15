@@ -7,7 +7,7 @@ Color Chaos is an online multiplayer game where players compete to color the mos
 - Upon visiting the page, users must either log in or register as a new user.
 - After authentication, users can either join existing rooms or create new ones.
 - Each room has a live chat feature where users can communicate with each other.
-- The game requires a minimum of 4 players to start.
+- The game requires a minimum of 2 players and a maximum of 4 players.
 - Once the game starts, players have 3 seconds to prepare before the grid appears.
 - Players must click on cells on the grid to color them within the time limit.
 - At the end of the game, the player with the most colored cells wins.
@@ -53,6 +53,29 @@ The client folder uses `socket.io-client` to establish a connection with the ser
 2. Run `npm install` to install dependencies.
 3. Modify the `.env` file with appropriate configurations such as database credentials.
 4. Run `nodemon start` (provided you have it globally installed) or `npm start` to start the server.
+
+### Screenshots
+
+#### Main page
+![Screenshot of main page displaying available rooms and option to create room](./dev/screenshots/ColorChaos_FULLInGame.JPG)
+
+#### Room
+![Screenshot of room chat](./dev/screenshots/ColorChaos_chat.JPG)
+
+#### In Game
+![Screenshot of an active round of the game](./dev/screenshots/ColorChaos_inGame.JPG)
+
+#### Game End
+![Screenshot of game end](./dev/screenshots/ColorChaos_gameEnd.JPG)
+
+#### Room After Game End
+![Screenshot of room after game end](./dev/screenshots/ColorChaos_endChat.JPG)
+
+#### Old Results Popup
+![Screenshot of old results popup](./dev/screenshots/ColorChaos_OldResults.JPG)
+
+
+
 
 ## Contributors
 
