@@ -1,3 +1,64 @@
+@keyframes opacityAnimation {
+  0% {
+    opacity: 1;
+  }
+  40% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-moz-keyframes opacityAnimation {
+  0% {
+    opacity: 1;
+  }
+  40% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@-webkit-keyframes opacityAnimation {
+  0% {
+    opacity: 1;
+  }
+  40% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes countdownAnimation {
+  0% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-moz-keyframes countdownAnimation {
+  0% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@-webkit-keyframes countdownAnimation {
+  0% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 .nav_bar {
   display: flex;
   height: 100px;
@@ -250,4 +311,16 @@
 .chat_box::-webkit-scrollbar-thumb {
   border-radius: 10px;
   background: $msg-user-bg-color $grad-bg;
+}
+
+.waiting_span {
+  -webkit-animation: opacityAnimation 4s infinite;
+  -moz-animation: opacityAnimation 4s infinite;
+  animation: opacityAnimation 4s infinite;
+}
+
+.countdown_span {
+  -webkit-animation: countdownAnimation 1.5s ease-out;
+  -moz-animation: countdownAnimation 1.5s ease-out;
+  animation: countdownAnimation 1.5s ease-out;
 }
